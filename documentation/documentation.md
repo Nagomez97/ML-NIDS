@@ -5,7 +5,8 @@
 2. Sniffer
 3. FlowMeter
 4. Analyzer
-=======
+
+---
 
 Welcome to the awesome tool ML-IDS documentation!
 
