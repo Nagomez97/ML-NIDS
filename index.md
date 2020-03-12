@@ -9,4 +9,4 @@ Please, refer to [documentation](documentation/documentation.md) to learn more a
 
 ### Support or Contact
 
-Having trouble with this tool? Check out our [documentation](https://nagomez97.github.io/ML-NIDS/documentation) or email me at _nagomez97@gmail.com_
+Having trouble with this tool? Check out our [documentation](documentation/documentation.md) or email me at _nagomez97@gmail.com_
