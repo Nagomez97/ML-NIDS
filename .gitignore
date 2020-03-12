@@ -1,0 +1,12 @@
+.DS_Store
+
+node_modules
+
+lib/core/metadata.js
+lib/core/MetadataBlog.js
+
+documentation/website/translated_docs
+documentation/website/build/
+documentation/website/yarn.lock
+documentation/website/node_modules
+documentation/website/i18n/*

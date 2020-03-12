@@ -1,6 +1,6 @@
 ## Welcome the ML-NIDS project site!
 
-Please, refer to [documentation](https://nagomez97.github.io/ML-NIDS/documentation) to learn more about this incredible tool!
+Please, refer to [documentation](documentation/documentation.md) to learn more about this incredible tool!
 
 
 
