@@ -1,5 +1,9 @@
 .DS_Store
 
+logs/
+
+src/sniffer/pcaps/
+
 node_modules
 package-lock.json
 
