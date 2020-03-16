@@ -3,6 +3,10 @@
 node_modules
 package-lock.json
 
+logs/
+
+*temp/
+
 lib/core/metadata.js
 lib/core/MetadataBlog.js
 
