@@ -2,7 +2,7 @@
     "name": "NIDS",
     "version": "1.0.0",
     "description": "Network Intrusion Detection System",
-    "main": "server.js",
+    "main": "./src/server.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start:dev": "ENV=debug nodemon -L ./src/server.js",
@@ -11,6 +11,7 @@
     "author": "nag0mez",
     "license": "ISC",
     "dependencies": {
+        "express": "^4.17.1",
         "sanitize-html": "^1.20.1",
         "winston": "^3.2.1",
         "winston-daily-rotate-file": "^4.2.1"
