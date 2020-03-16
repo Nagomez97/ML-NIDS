@@ -9,7 +9,7 @@ package-lock.json
 
 logs/
 
-*temp/
+*temp/*
 
 lib/core/metadata.js
 lib/core/MetadataBlog.js
