@@ -47,13 +47,15 @@ async function clear_directory(dirname){
             if (err) throw err;
         
             for (const file of files) {
-            fs.unlink(path.join(dirname, file), err => {
+            fs.unlinkSync(path.join(dirname, file), err => {
                 if (err) throw err;
                 else{
-                    logger.info(`SYSTEM \t\t Directory ${dirname} cleared`);
+                    logger.info(`SYSTEM \t\t File ${file} removed`);
                 }
             });
             }
+
+            logger.info(`SYSTEM \t\t Directory ${dirname} cleared`);
         });
     } catch(err){
         logger.error(`SYSTEM \t\t Error clearing directory ${dirname}: ${err}`);

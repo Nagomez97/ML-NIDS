@@ -28,11 +28,11 @@ async function flowmeter(filename){
     child.on('exit', (code) => {
         switch (code) {
             case 2:
-                logger.error(`FLOWMETER \t Error creating output file.`);
+                logger.error(`FLOWMETER \t Exit code 2`);
                 system.remove_file(filename);
                 return -1;
             case 1:
-                logger.error(`FLOWMETER \t Error creating output file.`);
+                logger.error(`FLOWMETER \t Exit code 1`);
                 system.remove_file(filename);
                 return -1;
             default:
