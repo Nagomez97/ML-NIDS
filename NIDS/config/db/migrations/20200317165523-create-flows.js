@@ -20,6 +20,9 @@ module.exports = {
       label: {
         type: Sequelize.STRING
       },
+      timestamp: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -23,7 +23,8 @@ services:
         # Where our data will be persisted
         volumes:
         # Crea el volumen (my-db) en el host que almacena de forma persistente el contenido del directorio '/var/lib/mysql' ubicado en el contendor.
-            - my-db:/var/lib/mysql  
+            - my-db:/var/lib/mysql
+            - ./docker_config/db-init:/docker-entrypoint-initdb.d  
         
     nids:
         image: nids

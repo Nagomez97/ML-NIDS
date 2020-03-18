@@ -8,6 +8,7 @@ function setRoutes(app) {
     app.post('/api/sniffer/start', core.startSniffer);
     app.post('/api/sniffer/stop', core.stopSniffer);
     app.post('/api/sniffer/reset', core.resetSniffer);
+    app.post('/api/ddbb/flows/destroyAll', core.destroyAllFlows);
     
 }
 

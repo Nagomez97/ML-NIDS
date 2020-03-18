@@ -2,6 +2,7 @@ const logger = require('../../config/log/logsConfig');
 const sniffer = require('../sniffer/sniffer');
 const networks = require('../utils/networks');
 const system = require('../utils/system');
+const Flows = require('../database/flows');
 
 const _temp = `${__dirname}/../temp/`;
 
@@ -81,8 +82,19 @@ async function resetSniffer(req, res){
     })
 }
 
+async function destroyAllFlows(req, res){
+    logger.info(`CORE \t\t Destroying flows on DDBB.`);
+    Flows.destroyAll();
+
+    return res.status(200).json({
+        status: 'OK',
+        message: 'Flows destroyed'
+    })
+}
+
 module.exports = {
     startSniffer,
     stopSniffer,
-    resetSniffer
+    resetSniffer,
+    destroyAllFlows
 }
