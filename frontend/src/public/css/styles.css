@@ -1,0 +1,207 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:500&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background-color: #24252A;
+    height: 100vh;
+}
+
+body {
+    height: 100%;
+    background-color: #24252A;
+}
+
+.main {
+    height: 100%;
+    overflow: auto;
+}
+
+label {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: #edf0f1;
+    text-decoration: none;
+}
+
+select {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    color: black;
+    text-decoration: none;
+}
+
+/* HEADER */
+
+.nav-links > li, li > a, li > button {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #edf0f1;
+    text-decoration: none;
+}
+
+header {
+    display: flex;
+    justify-content: flex-end; /*Push to the right*/
+    align-items: flex-end;
+    padding: 20px 10%;
+    border-bottom: 1px solid #edf0f1;
+    box-shadow: 0px 1px 3px 1px #edf0f1 ;
+    height: 10vh;
+}
+
+.logo {
+    cursor: pointer;
+    margin-right: auto;
+}
+
+.nav_links {
+    list-style: none;
+}
+
+.nav_links li {
+    display: inline-block;
+    padding: 0px 20px;
+}
+
+.nav_links li a {
+    transition: all 0.3s ease 0s;
+}
+
+.nav_links li a:hover {
+    color: #0088a9;
+}
+
+button {
+    padding: 9px 25px;
+    background-color: rgba(0, 136, 169, 1);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+button:hover {
+    background-color: rgba(0, 136, 169, 0.8);
+}
+
+/* LEFT MENU */
+
+/* MAIN CONTENT */
+.dashboard {
+    padding: 50px 250px ;
+    align-content: center;
+    height: 85vh;
+}
+
+.container {
+    width: 70%;
+    height: 500px;
+    margin: auto;
+}
+
+
+
+/* FOOTER */
+footer {
+    height: 5vh;
+    position: relative;
+    justify-content: right; /*Push to the right*/
+    align-items: right;
+    padding: 0px 50px;
+}
+
+footer > .nav_links {
+    text-align: right;
+}
+
+.footer-li, .footer-li > a, .footer-li > button {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: #edf0f1;
+    text-decoration: none;
+}
+
+/* TABLE */
+
+table {
+    background-color: #24252A;
+    border-radius: 10px;
+}
+
+td {
+    font-family: "Montserrat", sans-serif;
+     font-weight: 500;
+     font-size: 16px;
+     color: #edf0f1;
+     background-color: none;
+ }
+ 
+ th {
+     font-family: "Montserrat", sans-serif;
+     font-weight: 500;
+     font-size: 20px;
+     color: #edf0f1;
+ }
+
+ #flowTable_info, #flowTable_previous, #flowTable_next {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: #edf0f1 !important;
+    text-decoration: none;
+ }
+
+ #flowTable_info {
+     cursor: default;
+ }
+
+ #flowTable_previous, #flowTable_next {
+     cursor: pointer;
+ }
+
+ .dataTables_wrapper .dataTables_paginate .paginate_button {
+     padding: 0.2em 0.5em;
+ }
+
+
+tbody>tr:hover {
+    background-color: rgb(130,130,130, 0.8) !important; /*Dimgray*/
+    cursor: default;
+}
+
+table.dataTable tbody tr {
+    background-color: #24252A;
+}
+
+tbody > tr, tbody > td {
+    cursor: pointer !important;
+}
+
+#flowTable_filter > label > input {
+    color: #24252A;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    text-align: center;
+
+}
+
+#flowTable_paginate > span > .paginate_button:not(.current) {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    color: #edf0f1 !important;
+}
+
+#flowTable_paginate > span > span {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    color: #edf0f1 !important;
+}

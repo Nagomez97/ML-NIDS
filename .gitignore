@@ -10,6 +10,9 @@ package-lock.json
 logs/
 
 *temp/*
+NIDS/src/temp/*
+
+NIDS/*.log
 
 lib/core/metadata.js
 lib/core/MetadataBlog.js

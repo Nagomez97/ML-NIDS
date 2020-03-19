@@ -25,6 +25,8 @@ services:
         # Crea el volumen (my-db) en el host que almacena de forma persistente el contenido del directorio '/var/lib/mysql' ubicado en el contendor.
             - my-db:/var/lib/mysql
             - ./docker_config/db-init:/docker-entrypoint-initdb.d  
+            - /etc/timezone:/etc/timezone:ro
+            - "/etc/localtime:/etc/localtime:ro"
         
     nids:
         image: nids
@@ -41,6 +43,24 @@ services:
             - db
         volumes:
         - ./NIDS/:/usr/src/
+        - /etc/timezone:/etc/timezone:ro
+        - "/etc/localtime:/etc/localtime:ro"
+        command: npm run start
+
+    frontend:
+        image: frontend
+        container_name: frontend
+        build: 
+            context: .
+            dockerfile: ./frontend/Dockerfile
+        env_file: 
+        - ./docker_config/dev/app_db.dev.env
+        ports: 
+            - 8000:8000
+        volumes:
+        - ./frontend/:/usr/src/
+        - /etc/timezone:/etc/timezone:ro
+        - "/etc/localtime:/etc/localtime:ro"
         command: npm run start
 
     
