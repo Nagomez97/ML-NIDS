@@ -16,6 +16,8 @@
         
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
         
     </head>
     <body>
@@ -37,7 +39,7 @@
             </div>
             
             <main class="dashboard" id="dashboard">
-                <dashboard></dashboard>
+                <dashboard v-bind:flows="flows"></dashboard>
             </main>
             <footer class="footer">
                 <ul class="nav_links">
@@ -51,7 +53,5 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/vuetify/2.2.18/vuetify.min.js"></script>
         <script src="/js/app.js"></script>
-        <script src="/js/utils.js"></script>
-        <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     </body>
 </html>

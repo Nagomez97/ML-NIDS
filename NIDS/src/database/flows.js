@@ -1,5 +1,6 @@
 const Flows = require('../models/index').flows;
 const logger = require('../../config/log/logsConfig');
+const { Op } = require("sequelize");
 
 /**
  * Creates flow entry on DDBB
@@ -63,6 +64,7 @@ async function getFlowsByIp(ip_src, ip_dst){
     if(ip_dst != null) condition.ip_dst = ip_dst;
 
     await Flows.findAll({
+        attributes: ['ip_src', 'ip_dst', 'port_dst', 'label', 'timestamp'],
         where: condition,
         order: [
             ['timestamp', 'ASC']
@@ -83,12 +85,12 @@ async function getFlowsByIp(ip_src, ip_dst){
 async function getFlowsByPort(port){
 
     await Flows.findAll({
+        attributes: ['ip_src', 'ip_dst', 'port_dst', 'label', 'timestamp'],
         where: {port_dst : port},
         order: [
             ['timestamp', 'ASC']
         ]
     }).then(res => {
-        console.log(res.map(r => {return r.dataValues}))
         return res.map(r => {return r.dataValues});
     }).catch(err => {
         logger.error(`FLOWS DATABASE \t Error retrieving flows by Port. ${err}`);
@@ -104,12 +106,12 @@ async function getFlowsByPort(port){
 async function getFlowsByLabel(label){
 
     await Flows.findAll({
+        attributes: ['ip_src', 'ip_dst', 'port_dst', 'label', 'timestamp'],
         where: {label : label},
         order: [
             ['timestamp', 'ASC']
         ]
     }).then(res => {
-        console.log(res.map(r => {return r.dataValues}))
         return res.map(r => {return r.dataValues});
     }).catch(err => {
         logger.error(`FLOWS DATABASE \t Error retrieving flows by label. ${err}`);
@@ -117,6 +119,58 @@ async function getFlowsByLabel(label){
     })
 }
 
+/**
+ * Returns an array of Flows from between two dates
+ *
+ * @param {*} from
+ * @param {*} to
+ * @returns
+ */
+function getFlowsByInterval(from, to){
+    return Flows.findAll({
+        attributes: ['ip_src', 'ip_dst', 'port_dst', 'label', 'timestamp'],
+        where: {
+            timestamp : {
+                [Op.gte]: from,
+                [Op.lt]: to
+            }
+        },
+        order: [
+            ['timestamp', 'ASC']
+        ]
+    }).then(res => {
+        return res.map(r => {return r.dataValues});
+    }).catch(err => {
+        logger.error(`FLOWS DATABASE \t Error retrieving flows by time interval. ${err}`);
+        return null;
+    })
+}
+
+
+/**
+ * Returns an array of Flows from between two dates
+ *
+ * @param {*} from
+ * @returns
+ */
+function getFlowsFromHour(from){
+    return Flows.findAll({
+        attributes: ['ip_src', 'ip_dst', 'port_dst', 'label', 'timestamp'],
+        where: {
+            timestamp : {
+                [Op.gte]: from
+            }
+        },
+        order: [
+            ['timestamp', 'ASC']
+        ]
+    }).then(res => {
+        return res.map(r => {return r.dataValues});
+    }).catch(err => {
+        logger.error(`FLOWS DATABASE \t Error retrieving flows from hour. ${err}`);
+        return null;
+    })
+}
 
 module.exports = {
     newFlow,
@@ -124,5 +178,7 @@ module.exports = {
     getFlowsByIp,
     getFlowsByPort,
     getFlowsByLabel,
-    destroyAll
+    destroyAll,
+    getFlowsByInterval,
+    getFlowsFromHour
 }

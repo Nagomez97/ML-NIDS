@@ -1,4 +1,26 @@
 Vue.component('dashboard', {
+    props: ['flows'],
+    mounted () {
+        var table = $('#flowTable').DataTable({
+          "scrollY": "50vh",
+          "scrollCollapse": true,
+          ajax: 'http://localhost:8080/api/ddbb/flows/getCurrentHour',
+          columns: [
+              {"data" : "ip_src"},
+              {"data" : "ip_dst"},
+              {"data" : "port_dst"},
+              {"data" : "label"},
+              {"data" : "timestamp"}
+          ],
+          order: [[4, 'desc']],
+          pageLength: 100
+      });
+      $('.dataTables_length').addClass('bs-select');
+
+      setInterval( function () {
+          table.ajax.reload();
+      }, 10000 );
+    },
     template: `
         <div class="container">
             <div class="table-outter">
@@ -13,104 +35,7 @@ Vue.component('dashboard', {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>192.179.1.1</th>
-                <td>192.168.1.10</td>
-                <td>80</td>
-                <td>01:30:34:10UTC</td>
-                <td>Attack</td>
-              </tr>
-              <tr>
-                <td>192.179.1.1</th>
-                <td>192.168.1.10</td>
-                <td>80</td>
-                <td>01:30:34:10UTC</td>
-                <td>Attack</td>
-              </tr>
-              <tr>
-                <td>192.179.1.1</th>
-                <td>192.168.1.10</td>
-                <td>80</td>
-                <td>01:30:34:10UTC</td>
-                <td>Attack</td>
-              </tr>
-              <tr>
-                <td>192.179.1.1</th>
-                <td>192.168.1.10</td>
-                <td>80</td>
-                <td>01:30:34:10UTC</td>
-                <td>Attack</td>
-              </tr>
-              <tr>
-                <td>192.179.1.1</th>
-                <td>192.168.1.10</td>
-                <td>80</td>
-                <td>01:30:34:10UTC</td>
-                <td>Attack</td>
-              </tr>
-              <tr>
-                <td>192.179.1.1</th>
-                <td>192.168.1.10</td>
-                <td>80</td>
-                <td>01:30:34:10UTC</td>
-                <td>Attack</td>
-              </tr>
-              <tr>
-                <td>192.179.1.1</th>
-                <td>192.168.1.10</td>
-                <td>80</td>
-                <td>01:30:34:10UTC</td>
-                <td>Attack</td>
-              </tr>
-              <tr>
-                <td>192.179.1.1</th>
-                <td>192.168.1.10</td>
-                <td>80</td>
-                <td>01:30:34:10UTC</td>
-                <td>Attack</td>
-              </tr>
-              <tr>
-                <td>192.179.1.1</th>
-                <td>192.168.1.10</td>
-                <td>80</td>
-                <td>01:30:34:10UTC</td>
-                <td>Attack</td>
-              </tr>
-              <tr>
-                <td>192.179.1.1</th>
-                <td>192.168.1.10</td>
-                <td>80</td>
-                <td>01:30:34:10UTC</td>
-                <td>Attack</td>
-              </tr>
-              <tr>
-                <td>192.179.1.1</th>
-                <td>192.168.1.10</td>
-                <td>80</td>
-                <td>01:30:34:10UTC</td>
-                <td>Attack</td>
-              </tr>
-              <tr>
-                <td>192.179.1.1</th>
-                <td>192.168.1.10</td>
-                <td>80</td>
-                <td>01:30:34:10UTC</td>
-                <td>Attack</td>
-              </tr>
-              <tr>
-                <td>192.179.1.1</th>
-                <td>192.168.1.10</td>
-                <td>80</td>
-                <td>01:30:34:10UTC</td>
-                <td>Attack</td>
-              </tr>
-              <tr>
-                <td>192.179.1.1</th>
-                <td>192.168.1.10</td>
-                <td>80</td>
-                <td>01:30:34:10UTC</td>
-                <td>Attack</td>
-              </tr>
+
             </tbody>
           </table>
             </div>
@@ -119,5 +44,14 @@ Vue.component('dashboard', {
 })
 
 new Vue({
-    el: '#dashboard'
+    el: '#dashboard',
+    data: function () {
+      return {
+        flows: null
+      }
+    },
+    methods: {
+    },
+    mounted: function() {
+    },
 })

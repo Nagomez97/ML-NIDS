@@ -101,7 +101,7 @@ button:hover {
 }
 
 .container {
-    width: 50%;
+    width: 70%;
     height: 500px;
     margin: auto;
 }
@@ -183,4 +183,25 @@ table.dataTable tbody tr {
 
 tbody > tr, tbody > td {
     cursor: pointer !important;
+}
+
+#flowTable_filter > label > input {
+    color: #24252A;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    text-align: center;
+
+}
+
+#flowTable_paginate > span > .paginate_button:not(.current) {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    color: #edf0f1 !important;
+}
+
+#flowTable_paginate > span > span {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    color: #edf0f1 !important;
 }

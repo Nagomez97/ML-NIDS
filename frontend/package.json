@@ -9,6 +9,7 @@
     "author": "nag0mez",
     "license": "ISC",
     "dependencies": {
+        "axios": "^0.19.2",
         "express": "^4.17.1",
         "sanitize-html": "^1.20.1",
         "winston": "^3.2.1",
