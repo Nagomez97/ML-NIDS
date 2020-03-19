@@ -1,0 +1,20 @@
+{
+    "name": "NIDS",
+    "version": "1.0.0",
+    "description": "Network Intrusion Detection System",
+    "main": "./src/app.js",
+    "scripts": {
+        "start": "nodemon  -L ./src/app.js"
+    },
+    "author": "nag0mez",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.17.1",
+        "sanitize-html": "^1.20.1",
+        "winston": "^3.2.1",
+        "winston-daily-rotate-file": "^4.2.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.2"
+    }
+}

@@ -43,6 +43,20 @@ services:
         - ./NIDS/:/usr/src/
         command: npm run start
 
+    frontend:
+        image: frontend
+        container_name: frontend
+        build: 
+            context: .
+            dockerfile: ./frontend/Dockerfile
+        env_file: 
+        - ./docker_config/dev/app_db.dev.env
+        ports: 
+            - 8000:8000
+        volumes:
+        - ./frontend/:/usr/src/
+        command: npm run start
+
     
 # Names our volume
 volumes:
