@@ -13,6 +13,9 @@
 # Deployment
 **Vision** is a really easy-to-deploy application. It is completely Dockerized, so you will only need to install Docker, docker-compose and NodeJS. Here you will see an example of installation for an Ubuntu system.
 
+# IMPORTANT
+NIDS **must** be run on a Linux system. This is because the containers use the _host_ network mode in order to be able to sniff traffic from the host network interface. Because of the Hyper-V, Windows does not allow this configuration.
+
 ## 1. Install Docker
 This is based on the [Docker docs](https://docs.docker.com/install/linux/docker-ce/ubuntu/) for Ubuntu. 
 
