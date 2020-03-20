@@ -11,6 +11,7 @@ The whole project is included in several Docker containers, so you will need to 
 After that, deploy the NIDS is really simple:
 
 `docker-compose build`
+
 `docker-compose up`
 
 # IMPORTANT

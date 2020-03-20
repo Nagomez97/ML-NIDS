@@ -1,7 +1,7 @@
 const { spawn } = require('child_process');
 const logger = require('../../config/log/logsConfig');
 const system = require('../utils/system');
-const fs = require('fs');
+const { csv2ddbb } = require('../database/csv2database');
 
 const csvs = `${__dirname}/../temp/csv/`;
 
@@ -13,9 +13,10 @@ const csvs = `${__dirname}/../temp/csv/`;
  * @param {*} filename
  */
 async function flowmeter(filename){
-    var out = csvs + filename.split('/').pop().replace('.pcap', '.csv');
+    var out = csvs + filename.split('/').pop().replace('.pcap', '.pcap_Flow.csv');
     var command = [`${filename}`, `${csvs}`]
 
+    console.log(command.join(' '))
     var child = spawn(`${__dirname}/bin/cfm`, command, {
         shell: true
     });
@@ -28,15 +29,16 @@ async function flowmeter(filename){
     child.on('exit', (code) => {
         switch (code) {
             case 2:
-                logger.error(`FLOWMETER \t Error creating output file.`);
+                logger.error(`FLOWMETER \t Exit code 2`);
                 system.remove_file(filename);
                 return -1;
             case 1:
-                logger.error(`FLOWMETER \t Error creating output file.`);
+                logger.error(`FLOWMETER \t Exit code 1`);
                 system.remove_file(filename);
                 return -1;
             default:
                 logger.debug(`FLOWMETER \t Finished. Saved as ${out}`);
+                csv2ddbb(out);
                 system.remove_file(filename); // Remove pcap to avoid space waste
                 return 0;
         }

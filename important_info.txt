@@ -1,0 +1,2 @@
+# Sequelize migrate
+DB_USERNAME='nacho' DB_PASSWORD='nacho' DB_HOSTNAME='127.0.0.1' npx sequelize db:migrate

@@ -4,15 +4,17 @@
     "description": "Network Intrusion Detection System",
     "main": "./src/server.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "start:dev": "ENV=debug nodemon -L ./src/server.js",
-        "start": "node ./src/server.js"
+        "start": "sudo DB_USERNAME=$DB_USERNAME DB_PASSWORD=$DB_PASSWORD nodemon --ignore './src/temp' -L ./src/server.js"
     },
     "author": "nag0mez",
     "license": "ISC",
     "dependencies": {
+        "csv-reader": "^1.0.6",
+        "dotenv": "^8.2.0",
         "express": "^4.17.1",
+        "mysql2": "^2.1.0",
         "sanitize-html": "^1.20.1",
+        "sequelize": "^5.21.5",
         "winston": "^3.2.1",
         "winston-daily-rotate-file": "^4.2.1"
     },

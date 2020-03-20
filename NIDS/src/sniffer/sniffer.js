@@ -38,7 +38,7 @@ async function sniff(iface, duration){
 
     _child.process.on('exit', (code) => {
         switch (code) {
-            case 10:
+            case 9:
                 logger.info(`SNIFFER \t Stopped.`);
                 return 0;
             case 2:
@@ -49,13 +49,16 @@ async function sniff(iface, duration){
                 logger.error(`SNIFFER \t Permission error. Try again running as sudo.`);
                 system.remove_file(filename);
                 return -1;
-            default:
+            case 0:
                 logger.debug(`SNIFFER \t Tshark finished. Launching FlowMeter.`);
                 if(_child.status != 'STOPPED'){
                     flowmeter(filename);
                     sniff(iface, duration); //Loops
                 }
                 return 0;
+            default:
+                logger.info(`SNIFFER \t Stopped.`);
+                return -1;
         }
     })
 }
@@ -67,9 +70,9 @@ async function sniff(iface, duration){
  */
 function stop(){
     _child.status = 'STOPPED';
-    process.kill(_child.process.pid, 'SIGKILL');
-
     system.remove_file(_child.filename);
+    
+    process.kill(_child.process.pid, 'SIGKILL');
     
     return;
 }
