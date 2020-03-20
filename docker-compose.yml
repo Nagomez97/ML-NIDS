@@ -51,7 +51,7 @@ services:
         - ./NIDS/:/usr/src/
         - /etc/timezone:/etc/timezone:ro
         - "/etc/localtime:/etc/localtime:ro"
-        command: npm run start
+        command: npm run start:dev
 
     frontend:
         image: frontend
@@ -67,7 +67,7 @@ services:
         - ./frontend/:/usr/src/
         - /etc/timezone:/etc/timezone:ro
         - "/etc/localtime:/etc/localtime:ro"
-        command: npm run start
+        command: npm run start:dev
 
     
 # Names our volume

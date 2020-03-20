@@ -10,7 +10,7 @@
 
 ---
 
-Welcome to the awesome tool ML-IDS documentation! Here you will learn verything about me!
+Welcome to the **Vision** ML-NIDS documentation! Here you will learn verything about me!
 
 # ML-NIDS
 A _Network Intrusion Detection System (NIDS)_ is a tool capable of analyze every packet surfing your local network and detect anomalies or attack patterns. This is everything but new, of course... But what if we add some **Machine Learning** stuff?
