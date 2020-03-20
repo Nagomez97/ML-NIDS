@@ -4,7 +4,8 @@
     "description": "Network Intrusion Detection System",
     "main": "./src/server.js",
     "scripts": {
-        "start": "sudo DB_USERNAME=$DB_USERNAME DB_PASSWORD=$DB_PASSWORD nodemon --ignore './src/temp' -L ./src/server.js"
+        "start:dev": "sudo DB_USERNAME=$DB_USERNAME DB_PASSWORD=$DB_PASSWORD nodemon --ignore './src/temp' -L ./src/server.js",
+        "start": "sudo DB_USERNAME=$DB_USERNAME DB_PASSWORD=$DB_PASSWORD node ./src/server.js"
     },
     "author": "nag0mez",
     "license": "ISC",
