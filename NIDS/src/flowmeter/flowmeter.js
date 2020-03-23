@@ -17,8 +17,6 @@ const csvs = `${__dirname}/../temp/csv/`;
 async function flowmeter(filename){
     var out = csvs + filename.split('/').pop().replace('.pcap', '.pcap_Flow.csv');
     var command = [`${filename}`, `${csvs}`]
-
-    console.log(command.join(' '))
     var child = spawn(`${__dirname}/bin/cfm`, command, {
         shell: true
     });
