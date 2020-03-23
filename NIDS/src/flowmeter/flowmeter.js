@@ -1,7 +1,7 @@
 const { spawn } = require('child_process');
 const logger = require('../../config/log/logsConfig');
 const system = require('../utils/system');
-const { csv2ddbb } = require('../database/csv2database');
+const { predictML } = require('../ML/predict');
 
 const csvs = `${__dirname}/../temp/csv/`;
 
@@ -9,14 +9,14 @@ const csvs = `${__dirname}/../temp/csv/`;
 /**
  * Launches the flowmeter. Receives the filename of the pcap and saves the
  * csv file on temp/csv. At the end, removes the pcap to avoid space waste
+ * and calls to the ML model python launcher, predict.js
+ *
  *
  * @param {*} filename
  */
 async function flowmeter(filename){
     var out = csvs + filename.split('/').pop().replace('.pcap', '.pcap_Flow.csv');
     var command = [`${filename}`, `${csvs}`]
-
-    console.log(command.join(' '))
     var child = spawn(`${__dirname}/bin/cfm`, command, {
         shell: true
     });
@@ -38,7 +38,7 @@ async function flowmeter(filename){
                 return -1;
             default:
                 logger.debug(`FLOWMETER \t Finished. Saved as ${out}`);
-                csv2ddbb(out);
+                predictML(out);
                 system.remove_file(filename); // Remove pcap to avoid space waste
                 return 0;
         }
