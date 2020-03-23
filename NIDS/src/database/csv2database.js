@@ -25,7 +25,7 @@ function csv2ddbb(filename){
             }
         })
         .on('end', function (data) {
-            logger.debug(`CSC2DDBB \t Finished reading csv.`);
+            logger.debug(`CSV2DDBB \t Finished reading csv.`);
             System.remove_file(filename);
         });
  
