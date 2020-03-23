@@ -1,15 +1,16 @@
 [Home](https://nagomez97.github.io/ML-NIDS/)
 
 # INDEX
-1. [ML-NIDS](documentation.md)
-2. [API](api.md)
-3. [Sniffer](sniffer.md)
-4. [FlowMeter](sniffer.md)
-5. [Analyzer](analyzer.md)
+1. [Introduction](documentation.md)
+2. [Deployment](deployment.md)
+3. [API](api.md)
+4. [Sniffer](sniffer.md)
+5. [FlowMeter](sniffer.md)
+6. [Analyzer](analyzer.md)
 
 ---
 
-Welcome to the awesome tool ML-IDS documentation! Here you will learn verything about me!
+Welcome to the **Vision** ML-NIDS documentation! Here you will learn verything about me!
 
 # ML-NIDS
 A _Network Intrusion Detection System (NIDS)_ is a tool capable of analyze every packet surfing your local network and detect anomalies or attack patterns. This is everything but new, of course... But what if we add some **Machine Learning** stuff?

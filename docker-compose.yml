@@ -14,6 +14,9 @@ services:
         env_file: 
         # Use process.env in node.js code, like this 'process.env.ENV'.
         - ./docker_config/dev/mysql.dev.env
+        environment: 
+            - DB_USERNAME=nacho
+            - DB_PASSWORD=nacho
         ports:
         # <Port exposed> : < MySQL Port running inside container>
             - '3306:3306'
@@ -37,6 +40,9 @@ services:
             dockerfile: ./NIDS/Dockerfile
         env_file: 
         - ./docker_config/dev/app_db.dev.env
+        environment: 
+            - DB_USERNAME=nacho
+            - DB_PASSWORD=nacho
         ports: 
             - 8080:8080
         depends_on:
@@ -45,7 +51,7 @@ services:
         - ./NIDS/:/usr/src/
         - /etc/timezone:/etc/timezone:ro
         - "/etc/localtime:/etc/localtime:ro"
-        command: npm run start
+        command: npm run start:dev
 
     frontend:
         image: frontend
@@ -61,7 +67,7 @@ services:
         - ./frontend/:/usr/src/
         - /etc/timezone:/etc/timezone:ro
         - "/etc/localtime:/etc/localtime:ro"
-        command: npm run start
+        command: npm run start:dev
 
     
 # Names our volume

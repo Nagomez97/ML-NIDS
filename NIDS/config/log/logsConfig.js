@@ -6,7 +6,7 @@ var sanitizeHtml = require('sanitize-html');
 //==============================
 // Environment
 //==============================
-process.env.ENV = process.env.ENV || 'test'
+process.env.ENV = process.env.ENV || 'development'
 
 // Logger Format definition
 const logFormat = winston.format.combine(
