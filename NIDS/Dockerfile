@@ -35,7 +35,6 @@ RUN apt-get -y install nodejs
 
 # Python and ML libraries
 RUN apt-get install -y python3-pip
-RUN pip3 install pickle
 RUN pip3 install pandas
 RUN pip3 install sklearn
 

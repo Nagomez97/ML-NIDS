@@ -9,8 +9,8 @@ Vue.component('dashboard', {
               {"data" : "ip_src"},
               {"data" : "ip_dst"},
               {"data" : "port_dst"},
-              {"data" : "label"},
-              {"data" : "timestamp"}
+              {"data" : "timestamp"},
+              {"data" : "label"}
           ],
           order: [[4, 'desc']],
           pageLength: 100
