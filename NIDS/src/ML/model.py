@@ -93,7 +93,6 @@ class Model:
 
 
 def main():
-    # filename = '../temp/csv/2020-03-23T09:54:08.957Z.pcap_Flow.csv'
     if len(sys.argv) != 2:
         exit(2)
 

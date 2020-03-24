@@ -25,8 +25,6 @@ async function predictML(filename){
         })
 }
 
-predictML('../temp/csv/2020-03-23T12:15:37.111Z.pcap_Flow.csv')
-
 module.exports = {
     predictML
 }
