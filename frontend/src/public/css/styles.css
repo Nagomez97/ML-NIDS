@@ -75,10 +75,33 @@ header {
 }
 
 .nav_links li a:hover {
-    color: #0088a9;
+    color: #edf0f1;
 }
 
-button {
+.btn.focus, .btn:focus, .btn:hover {
+    color: #edf0f1;
+}
+
+.startButton-text{
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #edf0f1;
+    text-decoration: none;
+}
+
+.dropdown-item {
+    display: inline-block;
+    width: 70%;
+    margin: auto;
+    text-align: left;
+}
+
+.dropdown-item:hover {
+    color: rgba(51,122,183, 0.6)!important;
+}
+
+button.start {
     padding: 9px 25px;
     background-color: rgba(0, 136, 169, 1);
     border: none;
@@ -87,8 +110,21 @@ button {
     transition: all 0.3s ease 0s;
 }
 
-button:hover {
+button.stop {
+    padding: 9px 25px;
+    background-color: rgba(105,0,0,1);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+button.start:hover {
     background-color: rgba(0, 136, 169, 0.8);
+}
+
+button.stop:hover {
+    background-color: rgba(105,0,0,0.8);
 }
 
 /* LEFT MENU */

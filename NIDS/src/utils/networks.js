@@ -12,6 +12,16 @@ function interfaceData(interface) {
     return (interface in ifaces) ? ifaces[interface] : -1;
 }
 
+/**
+ * Returns an array with the name of all the interfaces available on the host
+ *
+ */
+function getInterfaces(){
+    let ifaces = os.networkInterfaces();
+    return Object.keys(ifaces)
+}
+
 module.exports = {
-    interfaceData
+    interfaceData,
+    getInterfaces
 }

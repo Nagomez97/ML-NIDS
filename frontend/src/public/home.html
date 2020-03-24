@@ -22,14 +22,23 @@
     </head>
     <body>
         <div class="main">
-            <header>
+            <header id='header-menu'>
                 <img class="logo" src="/images/vision_100px.png" alt="Logo" width="70px">
                 <nav>
                     <ul class="nav_links">
                         <li><a href="#">Services</a></li>
                         <li><a href="#">Projects</a></li>
-                        <li><a href="#">About</a></li>
-                        <li> <a class="cta" href="#"><button>Launch</button></a></li>
+                        <li><a href="https://nagomez97.github.io/ML-NIDS/">About</a></li>
+                        <li>
+
+                            <div class="dropdown" id="dropdown-div">
+                                <button class="btn btn-secondary dropdown-toggle start startButton-text" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Launch
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                </div>
+                              </div>
+                        </li>
                     </ul>
                 </nav>
                 
@@ -53,5 +62,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/vuetify/2.2.18/vuetify.min.js"></script>
         <script src="/js/app.js"></script>
+        <script src="/js/utils.js"></script>
     </body>
 </html>

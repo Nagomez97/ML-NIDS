@@ -7,6 +7,8 @@ const Utils = require('../utils/hours');
 
 const _temp = `${__dirname}/../temp/`;
 
+var _running = false;
+
 
 /**
  * Starts the sniffer loop and checks for valid input fields
@@ -34,9 +36,10 @@ async function startSniffer(req, res){
         })
     }
 
-    logger.info(`CORE \t\t Starting sniffer...`);
+    logger.info(`CORE \t\t Starting sniffer on interface ${iface}...`);
 
     sniffer.sniff(iface, timeout);
+    _running = true
 
     return res.status(200).json({
         status: 'OK',
@@ -62,6 +65,7 @@ async function stopSniffer(req, res){
         })
     }
     
+    _running = false;
 
     return res.status(200).json({
         status: 'OK',
@@ -125,7 +129,7 @@ async function getFromHour(req, res){
     var flows = await Flows.getFlowsByInterval(fromHour, toHour);
 
     return res.status(200).json({
-        'flows': flows
+        'data': flows
     })
 
 }
@@ -155,6 +159,27 @@ async function getByIpSrc(req, res){
 
 }
 
+/**
+ * Checks if the sniffer is running
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
+async function isRunning(req, res){
+    return res.status(200).json({
+        'running': _running
+    });
+}
+
+async function getInterfaces(req, res){
+    var ifaces = networks.getInterfaces();
+
+    return res.status(200).json({
+        'interfaces': ifaces
+    })
+}
+
 module.exports = {
     startSniffer,
     stopSniffer,
@@ -162,5 +187,7 @@ module.exports = {
     destroyAllFlows,
     getByIpSrc,
     getFromHour,
-    getCurrentHour
+    getCurrentHour,
+    isRunning,
+    getInterfaces
 }
