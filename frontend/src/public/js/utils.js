@@ -21,17 +21,17 @@ function checkRunning(){
             $('#dropdown-div').removeClass('open');
             $('#dropdownMenuButton').html('Launch');
             $('#dropdownMenuButton').attr("data-toggle", "dropdown");
-            // $('#dropdownMenuButton').attr("onclick", "startSniffer();");
         }
     })
 }
 
-function startSniffer(){
+function startSniffer(interface){
+
     $.ajax({
         url: "http://localhost:8080/api/sniffer/start",
         type: "post",
         contentType: "application/x-www-form-urlencoded",
-        data: "interface=wlp3s0&timeout=10",
+        data: "interface=" + interface + "&timeout=10",
         success: function(){
             checkRunning();
         }
@@ -54,7 +54,7 @@ function fetchInterfaces(){
     $.get("http://localhost:8080/api/sniffer/getInterfaces", function(data){
         data.interfaces.forEach(iface => {
             var _dropdown = $(".dropdown-menu");
-            _dropdown.append("<a class='dropdown-item interface btn btn-secondary' role='button' onclick='startSniffer(this.value)'>" + iface + "</a>")
+            _dropdown.append("<a class='dropdown-item interface btn btn-secondary' role='button' onclick='startSniffer(this.innerText)'>" + iface + "</a>")
         })
     })
 }
