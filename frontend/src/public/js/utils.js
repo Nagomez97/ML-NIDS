@@ -1,9 +1,7 @@
 // Code to launch when page is ready
 $(document).ready(function() {
-
     checkRunning();
     fetchInterfaces();
-
 })
 
 function checkRunning(){
