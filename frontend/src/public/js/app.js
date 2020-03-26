@@ -17,26 +17,79 @@ Vue.component('left_menu', {
 
 Vue.component('table-dashboard', {
     props: ['view'],
+    data: function (){
+      return {
+        table: null,
+        hour: -1,
+        selectedHour: 'Now'
+      }
+    },
+    methods: {
+      changeTable: function(hour){
+        
+        var url = 'http://localhost:8080/api/ddbb/flows/getFromHour?hour=' + hour;
+
+        this.hour = hour;
+
+        this.table.ajax.url(url);
+        this.table.ajax.reload();
+      },
+      addHour: function(){
+        var hours = ['00h', '01h', '02h', '03h', '04h', '05h', '06h', '07h', '08h', '09h', '10h', '11h', '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h']
+        
+        if(this.selectedHour == 'Now'){
+          this.selectedHour = '00h-01h';
+          return;
+        }
+        if(this.selectedHour == '23h-00h'){
+          this.selectedHour = 'Now';
+          return;
+        }
+
+        var pos = hours.indexOf(this.selectedHour.split('-')[0]);
+        this.selectedHour = hours[(pos + 1) % hours.length] + '-' + hours[(pos + 2) % hours.length]
+        
+      },
+      subHour: function(){
+        var hours = ['00h', '01h', '02h', '03h', '04h', '05h', '06h', '07h', '08h', '09h', '10h', '11h', '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h']
+
+        if(this.selectedHour == 'Now'){
+          this.selectedHour = '23h-00h';
+          return;
+        }
+        if(this.selectedHour == '00h-01h'){
+          this.selectedHour = 'Now';
+          return;
+        }
+
+        var pos = hours.indexOf(this.selectedHour.split('-')[0]);
+        this.selectedHour = hours[(pos - 1 + hours.length) % hours.length] + '-' + hours[(pos + hours.length) % hours.length]
+        
+      }
+    },
     mounted () {
 
-        var table = $('#flowTable').DataTable({
-          "scrollY": "50vh",
-          "scrollCollapse": true,
-          ajax: 'http://localhost:8080/api/ddbb/flows/getCurrentHour',
-          columns: [
-              {"data" : "ip_src"},
-              {"data" : "ip_dst"},
-              {"data" : "port_dst"},
-              {"data" : "timestamp"},
-              {"data" : "label"}
-          ],
-          order: [[4, 'desc']],
-          pageLength: 100
+      this.table = $('#flowTable').DataTable({
+        "scrollY": "50vh",
+        "scrollCollapse": true,
+        ajax: 'http://localhost:8080/api/ddbb/flows/getFromHour?hour=-1',
+        columns: [
+            {"data" : "ip_src"},
+            {"data" : "ip_dst"},
+            {"data" : "port_dst"},
+            {"data" : "timestamp"},
+            {"data" : "label"}
+        ],
+        order: [[3, 'desc']],
+        pageLength: 100
       });
-      $('.dataTables_length').addClass('bs-select');
 
+      $('.dataTables_length').addClass('bs-select');
+      var vm = this;
       setInterval( function () {
-          table.ajax.reload();
+        if(vm.hour == -1 || vm.hour == '-1'){
+          vm.table.ajax.reload();
+        }
       }, 10000 );
     },
     template: `
@@ -56,6 +109,23 @@ Vue.component('table-dashboard', {
 
                 </tbody>
               </table>
+            </div>
+            <div class="time-container">
+              <div class="row">
+                <div class="col-xs-3 col-xs-offset-3 no-margin">
+                  <div class="input-group number-spinner">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" data-dir="dwn" @click="subHour();"><span class="glyphicon glyphicon-minus"></span></button>
+                    </span>
+
+                    <button class="send-hour" @click="changeTable(selectedHour.split('-')[0].replace('h', ''))"> {{this.selectedHour}} </button>
+
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" data-dir="up" @click="addHour();"><span class="glyphicon glyphicon-plus"></span></button>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
         </div>
     `

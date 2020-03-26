@@ -114,7 +114,11 @@ async function destroyAllFlows(req, res){
 async function getFromHour(req, res){
     var hour = req.query.hour; // integer between 0-23
 
-    if(hour == null || hour % 1 != 0 || hour > 23 || hour < 0){ // Checks if hour is an integer and between 0 and 23
+    if(hour == '-1' || hour == null || hour == 'Now'){
+        return await getCurrentHour(req, res);
+    }
+
+    if(hour % 1 != 0 || hour > 23 || hour < 0){ // Checks if hour is an integer and between 0 and 23
         return res.status(400).json({
             'flows': []
         });

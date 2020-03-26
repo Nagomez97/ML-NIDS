@@ -74,3 +74,40 @@ tbody > tr, tbody > td {
     font-weight: 500;
     color: #edf0f1 !important;
 }
+
+/* Select time interval */
+.time-container > .row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+}   
+
+button.send-hour {
+    width: 80%;
+    height: 100%;
+    border-radius: 7px;
+    background: none;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    color: #edf0f1 !important;
+}
+
+button.send-hour:hover {
+    background-color: rgb(130,130,130, 0.8);
+}
+
+
+.no-margin {
+    margin: 0!important;
+}
+
+.btn:hover, .btn:active, .btn:focus {
+    color: #333!important;
+}
+
+.btn:active, .btn:focus {
+    background-color: #fff;
+}
