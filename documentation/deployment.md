@@ -66,8 +66,10 @@ $ npm -v
 At **docker_config/dev/**, there are two _.env_ files containing the database usernames and passwords. These are example files, so you **MUST** change its content. Set new credentials on both files before launching Vision.
 
 ## 5. Run
-To finish our deployment, you should run
+To finish our deployment, you should clone the repo and cd into it:
 ```
+git clone https://github.com/Nagomez97/ML-NIDS.git
+cd ML-NIDS
 docker-compose build
 docker-compose up
 ```
