@@ -17,6 +17,14 @@ function csv2ddbb(filename){
                 timestamp: row['Timestamp'],
                 label: row['Label']
             }
+            // Timestamp format to be ordered on ddbb
+            // yyyy/mm/dd hh:mm:ss
+            var tmp = data.timestamp.split("/");
+            var end = tmp[2].split(" ");
+            var ts = end[0] + '/' + tmp[1] + '/' + tmp[0] + ' ' + end[1];
+            data.timestamp = ts;
+
+
             try{
                 Flows.newFlow(data)
             }

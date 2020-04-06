@@ -1,3 +1,4 @@
+// Left Menu
 Vue.component('left_menu', {
   props: ['view'],
   template: `
@@ -15,6 +16,7 @@ Vue.component('left_menu', {
   `
 })
 
+// Table dashboard
 Vue.component('table-dashboard', {
     props: ['view'],
     data: function (){
@@ -90,7 +92,7 @@ Vue.component('table-dashboard', {
         if(vm.hour == -1 || vm.hour == '-1'){
           vm.table.ajax.reload();
         }
-      }, 10000 );
+      }, 5000 );
     },
     template: `
         <div class="container">
@@ -131,64 +133,138 @@ Vue.component('table-dashboard', {
     `
 });
 
+// Chart dashboard
 Vue.component('chart-dashboard', {
-  props: ['view'],
+  props: ['chart'],
   mounted () {
 
-      var table = $('#flowTable').DataTable({
-        "scrollY": "50vh",
-        "scrollCollapse": true,
-        ajax: 'http://localhost:8080/api/ddbb/flows/getCurrentHour',
-        columns: [
-            {"data" : "ip_src"},
-            {"data" : "ip_dst"},
-            {"data" : "port_dst"},
-            {"data" : "timestamp"},
-            {"data" : "label"}
-        ],
-        order: [[4, 'desc']],
-        pageLength: 100
-    });
-    $('.dataTables_length').addClass('bs-select');
-
-    setInterval( function () {
-        table.ajax.reload();
-    }, 10000 );
   },
   template: `
       <div class="container">
-          <div class="table-outter">
-            <table class="table" id="flowTable">
-              <thead class="thead-dark">
-                <tr>
-                  <th scope="col">IP Source</th>
-                  <th scope="col">IP Dest</th>
-                  <th scope="col">Port</th>
-                  <th scope="col">Timestamp</th>
-                  <th scope="col">Label</th>
-                </tr>
-              </thead>
-              <tbody>
-
-              </tbody>
-            </table>
+          <div class="top-menu-charts">
+            <div class="chart-type not-last">
+              <a href="#" @click="$emit('changechart', 'traffic-time')" :class="{ 'open-chart' : chart == 'traffic-time' }"> Traffic/Time </a>
+            </div>
+            <div class="chart-type not-last">
+              <a href="#" @click="$emit('changechart', 'traffic-ip')" :class="{ 'open-chart' : chart == 'traffic-ip' }"> Traffic/IP </a>
+            </div>
+            <div class="chart-type last">
+              <a href="#" @click="$emit('changechart', 'attacks-ip')" :class="{ 'open-chart' : chart == 'attacks-ip' }"> Attacks/IP </a>
+            </div>
           </div>
+
+          <keep-alive>
+              <component v-bind:is="chart"></component>
+          </keep-alive>
+
       </div>
   `
 });
 
+// Traffic/Time chart
+Vue.component('traffic-time', {
+  props: [],
+  mounted() {
+    var labels = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'];
+    var data_content = [12, 34, 17, 23, 24];
+    var data = {
+      labels: labels,
+      datasets: [{
+        label: '# of votes',
+        data: data_content
+      }]
+    }
 
+    var ctx = document.getElementById('traffic-time-chart').getContext('2d');
+    var myLineChart = new Chart(ctx, {
+      type: 'line',
+      data: data,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        },
+        elements: {
+          line: {
+            backgroundColor: 'rgba(241,143,102,0.2)',
+            borderColor: 'rgba(237,240,241,0.5)',
+            borderWidth: 2
+          },
+          point: {
+            backgroundColor: 'rgba(237,240,241,0.8)',
+          }
+        },
+        scales: {
+          yAxes: [{ 
+              gridLines: {
+                color: 'rgba(60,60,60,0.6)'
+              },
+              ticks: {
+                fontColor: 'rgba(237,240,241,0.8)', // this here
+              },
+          }],
+          xAxes: [{
+              display: false,
+              gridLines: {
+                  display: false,
+              },
+          }],
+        }
+      }
+  });
+  },
+  template: `
+      <div class="chart-container" width="400px" height="400px"> 
+        <canvas id="traffic-time-chart" width="400px" height="400px"></canvas>
+      </div>
+  
+  `
+})
 
+// Traffic/IP chart
+Vue.component('traffic-ip', {
+  props: [],
+  mounted() {
+
+  },
+  template: `
+      <a class="color: white;"> Traffic/IP chart. Building. </a>
+  
+  `
+})
+
+// Traffic/Time chart
+Vue.component('attacks-ip', {
+  props: [],
+  mounted() {
+
+  },
+  template: `
+      <a class="color: white;"> Attacks/IP chart. Building. </a>
+  
+  `
+})
+
+// App
 new Vue({
     el: '#app',
     data: function () {
       return {
-        open_view: 'table-dashboard'
+        open_view: 'table-dashboard',
+        chart_type: 'traffic-time'
       }
     },
     methods: {
       updateView(newView) {
         this.open_view = newView;
+      },
+      changeChart(newChart) {
+        this.chart_type = newChart;
       }
     } 
 })
