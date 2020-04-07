@@ -247,25 +247,28 @@ Vue.component('traffic-time', {
 
             // same day
             if(newDay == oldDay && newHour > oldHour && newMinute > oldMinute){
-              oldLabels.splice(index);
-              myChart.data.datasets[0].data.splice(index);
+              oldLabels.splice(index, 1);
+              myChart.data.datasets[0].data.splice(index, 1);
             }
             // same day, long interval
             else if (newDay == oldDay && newHour - oldHour > 1){
-              oldLabels.splice(index);
-              myChart.data.datasets[0].data.splice(index);
+              oldLabels.splice(index, 1);
+              myChart.data.datasets[0].data.splice(index, 1);
             }
             // More than one day
             else if (newDay - oldDay > 1){
-              oldLabels.splice(index);
-              myChart.data.datasets[0].data.splice(index);
+              oldLabels.splice(index, 1);
+              myChart.data.datasets[0].data.splice(index, 1);
             }
             // Midnight
             else if(newDay > oldDay && (oldHour < 23 || newMinute > oldMinute)){
-              oldLabels.splice(index);
-              myChart.data.datasets[0].data.splice(index);
+              oldLabels.splice(index, 1);
+              myChart.data.datasets[0].data.splice(index, 1);
             }
           })
+
+          // console.log('new: ' + newDay + " " + newHour + ':' + newMinute)
+          // console.log('old: ' + newDay + " " + newHour + '/' + newMinute)
           
           // re-render the chart
           myChart.update();
