@@ -159,10 +159,6 @@ async function getCurrentHour(req, res){
 
 }
 
-async function getByIpSrc(req, res){
-
-}
-
 /**
  * Checks if the sniffer is running
  *
@@ -176,6 +172,13 @@ async function isRunning(req, res){
     });
 }
 
+/**
+ * Returns an array with the network interfaces of the host
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 async function getInterfaces(req, res){
     var ifaces = networks.getInterfaces();
 
@@ -184,14 +187,89 @@ async function getInterfaces(req, res){
     })
 }
 
+async function getTimeTrafficData(req, res){
+    var hour = req.query.hour; // integer between 0-23
+    var flows = []
+
+    if(hour == '-1' || hour == null || hour == 'Now'){
+        var fromHour = Utils.getLastHour();
+
+        flows = await Flows.getFlowsFromHour(fromHour);
+
+        chartData = {}
+
+        flows = flows.map(flow => {
+            flow.len = flow.len_fwd + flow.len_bwd
+            flow.timestamp = flow.timestamp.substring(0, flow.timestamp.length - 3) // Remove seconds
+
+            if(chartData[flow.timestamp] == null){
+                chartData[flow.timestamp] = {
+                    'timestamp': flow.timestamp,
+                    'len': flow.len
+                }
+            }
+            else {
+                chartData[flow.timestamp].len += flow.len
+            }
+
+            return flow
+        })
+        
+        return res.status(200).json({
+            'chartData': chartData
+        })
+    }
+
+    if(hour % 1 != 0 || hour > 23 || hour < 0){ // Checks if hour is an integer and between 0 and 23
+        return res.status(400).json({
+            'flows': []
+        });
+    }
+    
+    var fromHour = Utils.get24DateFromHour(hour);
+    var toHour = Utils.get24DateToHour((parseInt(hour, 10) + 1) % 24);
+
+    logger.debug(`CORE \t\t Requested flows between ${fromHour} and ${toHour}`);
+
+
+    flows = await Flows.getFlowsByInterval(fromHour, toHour);
+
+    // Once we have all the flows within an hour, we want to group them on every minute
+    // and sum the amount of data sent within that minute.
+
+    chartData = {}
+
+    flows = flows.map(flow => {
+        flow.len = flow.len_fwd + flow.len_bwd
+        flow.timestamp = flow.timestamp.substring(0, flow.timestamp.length - 3) // Remove seconds
+
+        if(chartData[flow.timestamp] == null){
+            chartData[flow.timestamp] = {
+                'timestamp': flow.timestamp,
+                'len': flow.len
+            }
+        }
+        else {
+            chartData[flow.timestamp].len += flow.len
+        }
+
+        return flow
+    })
+    
+    return res.status(200).json({
+        'chartData': chartData
+    })
+
+}
+
 module.exports = {
     startSniffer,
     stopSniffer,
     resetSniffer,
     destroyAllFlows,
-    getByIpSrc,
     getFromHour,
     getCurrentHour,
     isRunning,
-    getInterfaces
+    getInterfaces,
+    getTimeTrafficData
 }

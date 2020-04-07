@@ -17,7 +17,7 @@ function setRoutes(app) {
     app.post('/api/ddbb/flows/destroyAll', core.destroyAllFlows);
     app.get('/api/ddbb/flows/getFromHour', core.getFromHour);
     app.get('/api/ddbb/flows/getCurrentHour', core.getCurrentHour);
-    app.get('/api/ddbb/flows/getByIpSrc', core.getByIpSrc);
+    app.get('/api/ddbb/flows/getChartTrafficTime', core.getTimeTrafficData);
 
 
 

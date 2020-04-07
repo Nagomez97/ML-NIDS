@@ -165,18 +165,16 @@ Vue.component('chart-dashboard', {
 Vue.component('traffic-time', {
   props: [],
   mounted() {
-    var labels = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'];
-    var data_content = [12, 34, 17, 23, 24];
     var data = {
-      labels: labels,
+      labels: [],
       datasets: [{
-        label: '# of votes',
-        data: data_content
+        label: 'Flow length (bytes)',
+        data: []
       }]
     }
 
     var ctx = document.getElementById('traffic-time-chart').getContext('2d');
-    var myLineChart = new Chart(ctx, {
+    var myChart = new Chart(ctx, {
       type: 'line',
       data: data,
       options: {
@@ -216,7 +214,70 @@ Vue.component('traffic-time', {
           }],
         }
       }
-  });
+    });
+
+    var getData = function() {
+      $.ajax({
+        url: 'http://localhost:8080/api/ddbb/flows/getChartTrafficTime',
+        success: function(data) {
+          var oldLabels = myChart.data.labels;
+
+          data = data.chartData;
+
+          // Add new data
+          Object.keys(data).map(timestamp => {
+            if(!oldLabels.includes(timestamp)){
+              myChart.data.labels.push(timestamp);
+              myChart.data.datasets[0].data.push(data[timestamp].len);
+            }
+            else{
+              var index = myChart.data.labels.indexOf(timestamp);
+              myChart.data.datasets[0].data[index] = data[timestamp].len
+            }
+          })  
+          
+          // Remove old data. One hour interval
+          oldLabels.map(function (timestamp, index) {
+            var oldMinute = timestamp.split(' ')[1].split(':')[1]
+            var newMinute = oldLabels[oldLabels.length -1].split(' ')[1].split(':')[1]
+            var oldHour = timestamp.split(' ')[1].split(':')[0]
+            var newHour = oldLabels[oldLabels.length -1].split(' ')[1].split(':')[0]
+            var oldDay = timestamp.split(' ')[0];
+            var newDay = oldLabels[oldLabels.length -1].split(' ')[0]
+
+            // same day
+            if(newDay == oldDay && newHour > oldHour && newMinute > oldMinute){
+              oldLabels.splice(index);
+              myChart.data.datasets[0].data.splice(index);
+            }
+            // same day, long interval
+            else if (newDay == oldDay && newHour - oldHour > 1){
+              oldLabels.splice(index);
+              myChart.data.datasets[0].data.splice(index);
+            }
+            // More than one day
+            else if (newDay - oldDay > 1){
+              oldLabels.splice(index);
+              myChart.data.datasets[0].data.splice(index);
+            }
+            // Midnight
+            else if(newDay > oldDay && (oldHour < 23 || newMinute > oldMinute)){
+              oldLabels.splice(index);
+              myChart.data.datasets[0].data.splice(index);
+            }
+          })
+          
+          // re-render the chart
+          myChart.update();
+        }
+      });
+    };
+
+    getData();
+    
+    // get new data every 3 seconds
+    setInterval(getData, 3000);
+
   },
   template: `
       <div class="chart-container" width="400px" height="400px"> 

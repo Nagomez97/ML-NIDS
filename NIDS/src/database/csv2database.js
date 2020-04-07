@@ -15,6 +15,8 @@ function csv2ddbb(filename){
                 ip_dst: row['Dst IP'],
                 port_dst: row['Dst Port'],
                 timestamp: row['Timestamp'],
+                len_fwd: row['TotLen Fwd Pkts'],
+                len_bwd: row['TotLen Bwd Pkts'],
                 label: row['Label']
             }
             // Timestamp format to be ordered on ddbb

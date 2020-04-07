@@ -13,7 +13,9 @@ async function newFlow(flowData){
         ip_dst: flowData.ip_dst,
         port_dst: flowData.port_dst,
         label: flowData.label,
-        timestamp: flowData.timestamp
+        timestamp: flowData.timestamp,
+        len_fwd: flowData.len_fwd,
+        len_bwd: flowData.len_bwd
     }).then(promise => {
         return promise.dataValues.id;
     }).catch((err) => {
@@ -64,7 +66,7 @@ async function getFlowsByIp(ip_src, ip_dst){
     if(ip_dst != null) condition.ip_dst = ip_dst;
 
     await Flows.findAll({
-        attributes: ['ip_src', 'ip_dst', 'port_dst', 'label', 'timestamp'],
+        attributes: ['ip_src', 'ip_dst', 'port_dst', 'label', 'timestamp', 'len_fwd', 'len_bwd'],
         where: condition,
         order: [
             ['timestamp', 'ASC']
@@ -85,7 +87,7 @@ async function getFlowsByIp(ip_src, ip_dst){
 async function getFlowsByPort(port){
 
     await Flows.findAll({
-        attributes: ['ip_src', 'ip_dst', 'port_dst', 'label', 'timestamp'],
+        attributes: ['ip_src', 'ip_dst', 'port_dst', 'label', 'timestamp', 'len_fwd', 'len_bwd'],
         where: {port_dst : port},
         order: [
             ['timestamp', 'ASC']
@@ -106,7 +108,7 @@ async function getFlowsByPort(port){
 async function getFlowsByLabel(label){
 
     await Flows.findAll({
-        attributes: ['ip_src', 'ip_dst', 'port_dst', 'label', 'timestamp'],
+        attributes: ['ip_src', 'ip_dst', 'port_dst', 'label', 'timestamp', 'len_fwd', 'len_bwd'],
         where: {label : label},
         order: [
             ['timestamp', 'ASC']
@@ -128,7 +130,7 @@ async function getFlowsByLabel(label){
  */
 function getFlowsByInterval(from, to){
     return Flows.findAll({
-        attributes: ['ip_src', 'ip_dst', 'port_dst', 'label', 'timestamp'],
+        attributes: ['ip_src', 'ip_dst', 'port_dst', 'label', 'timestamp', 'len_fwd', 'len_bwd'],
         where: {
             timestamp : {
                 [Op.gte]: from,
@@ -155,7 +157,7 @@ function getFlowsByInterval(from, to){
  */
 function getFlowsFromHour(from){
     return Flows.findAll({
-        attributes: ['ip_src', 'ip_dst', 'port_dst', 'label', 'timestamp'],
+        attributes: ['ip_src', 'ip_dst', 'port_dst', 'label', 'timestamp', 'len_fwd', 'len_bwd'],
         where: {
             timestamp : {
                 [Op.gte]: from
