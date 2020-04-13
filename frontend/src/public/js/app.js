@@ -23,7 +23,8 @@ Vue.component('table-dashboard', {
       return {
         table: null,
         hour: -1,
-        selectedHour: 'Now'
+        selectedHour: 'Now',
+        autoreload: true
       }
     },
     methods: {
@@ -67,6 +68,17 @@ Vue.component('table-dashboard', {
         var pos = hours.indexOf(this.selectedHour.split('-')[0]);
         this.selectedHour = hours[(pos - 1 + hours.length) % hours.length] + '-' + hours[(pos + hours.length) % hours.length]
         
+      },
+      changeAutoreload: function(){
+        this.autoreload = !this.autoreload;
+
+        if(!this.autoreload){
+          $('#play-button').removeClass('glyphicon-pause');
+          $('#play-button').addClass('glyphicon-play');
+        } else {
+          $('#play-button').removeClass('glyphicon-play');
+          $('#play-button').addClass('glyphicon-pause');
+        }
       }
     },
     mounted () {
@@ -89,7 +101,7 @@ Vue.component('table-dashboard', {
       $('.dataTables_length').addClass('bs-select');
       var vm = this;
       setInterval( function () {
-        if(vm.hour == -1 || vm.hour == '-1'){
+        if((vm.hour == -1 || vm.hour == '-1' || vm.hour == 'Now') && vm.autoreload){
           vm.table.ajax.reload();
         }
       }, 5000 );
@@ -126,6 +138,11 @@ Vue.component('table-dashboard', {
                       <button class="btn btn-default" data-dir="up" @click="addHour();"><span class="glyphicon glyphicon-plus"></span></button>
                     </span>
                   </div>
+                </div>
+                <div>
+                  <span class="play-pause">
+                    <button class="play-btn" data-dir="up" @click="changeAutoreload();"><span class="glyphicon glyphicon-pause" id="play-button"></span></button>
+                  </span>
                 </div>
               </div>
             </div>
