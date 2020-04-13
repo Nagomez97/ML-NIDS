@@ -283,9 +283,6 @@ Vue.component('traffic-time', {
               myChart.data.datasets[0].data.splice(index, 1);
             }
           })
-
-          // console.log('new: ' + newDay + " " + newHour + ':' + newMinute)
-          // console.log('old: ' + newDay + " " + newHour + '/' + newMinute)
           
           // re-render the chart
           myChart.update();
@@ -311,10 +308,88 @@ Vue.component('traffic-time', {
 Vue.component('traffic-ip', {
   props: [],
   mounted() {
+    var data = {
+      labels: [],
+      datasets: [{
+        label: 'Flow length (bytes)',
+        data: [],
+        backgroundColor: 'rgba(237,240,241,0.8)'
+      }]
+    }
+
+    var ctx = document.getElementById('traffic-ip-chart').getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: data,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        },
+        scales: {
+          yAxes: [{ 
+              gridLines: {
+                color: 'rgba(60,60,60,0.6)'
+              },
+              ticks: {
+                fontColor: 'rgba(237,240,241,0.8)', // this here
+              },
+          }],
+          xAxes: [{
+              display: false,
+              gridLines: {
+                  display: false,
+              },
+          }],
+        }
+      }
+    });
+
+    var getData = function() {
+      $.ajax({
+        url: 'http://localhost:8080/api/ddbb/flows/getIPTrafficData',
+        success: function(data) {
+          var oldLabels = myChart.data.labels;
+
+          data = data.chartData;
+
+          myChart.data.labels = Object.keys(data);
+          myChart.data.datasets[0].data = Object.values(data);
+
+          // // Add new data
+          // Object.keys(data).map(ip_src => {
+          //   if(!oldLabels.includes(ip_src)){
+          //     myChart.data.labels.push(ip_src);
+          //     myChart.data.datasets[0].data.push(data[ip_src].len);
+          //   }
+          //   else{
+          //     var index = myChart.data.labels.indexOf(ip_src);
+          //     myChart.data.datasets[0].data[index] = data[ip_src].len
+          //   }
+          // })  
+          
+          
+          // re-render the chart
+          myChart.update();
+        }
+      });
+    };
+
+    getData();
+    
+    // get new data every 30 seconds
+    setInterval(getData, 30000);
 
   },
   template: `
-      <a class="color: white;"> Traffic/IP chart. Building. </a>
+      <div class="chart-container" width="400px" height="400px"> 
+        <canvas id="traffic-ip-chart" width="400px" height="400px"></canvas>
+      </div>
   
   `
 })
