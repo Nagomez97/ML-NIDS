@@ -8,7 +8,13 @@ from sklearn.preprocessing import StandardScaler
 pickle_file = str(pathlib.Path(__file__).parent.absolute()) + '/pickles/LogReg_1.pkl'
 
 # Data to be (or not) standardized
-not_standard = ['Label', 'Dst Port', 'Protocol']
+# not_standard = ['Label', 'Dst Port', 'Protocol']
+# not_standard = ['Label', 'Protocol']
+not_standard = ['Label']
+
+# If prob >= LIMIT then it is considered attack
+_LIMIT = 0.85
+
 
 ##############################
 ##      Extra functions     ##
@@ -24,24 +30,6 @@ def standardize_one(df, standard, not_standard):
 
   to_std = pd.DataFrame(values, index=to_std.index, columns=to_std.columns)
   return pd.concat([not_std,to_std], axis=1)
-
-
-def standardize(train, test, standard, not_standard):
-  not_std_train = train[not_standard]
-  to_std_train = train[standard]
-
-  not_std_test = test[not_standard]
-  to_std_test = test[standard]
-
-  std = StandardScaler()
-
-  values_train = std.fit_transform(to_std_train.values)
-  values_test = std.transform(to_std_test.values)
-
-  to_std_train = pd.DataFrame(values_train, index=to_std_train.index, columns=to_std_train.columns)
-  to_std_test = pd.DataFrame(values_test, index=to_std_test.index, columns=to_std_test.columns)
-
-  return pd.concat([not_std_train, to_std_train], axis=1), pd.concat([not_std_test, to_std_test], axis=1)
 
 ###############################
 
@@ -69,21 +57,23 @@ class Model:
         return
 
     def preproc_dataset(self):
-        # We only want some columns
+        # We only want some columns.
+        # This is the dataframe used to predict, which will need standardization
         self.df_predict = self.df[self.model.data_header]
 
-        # Info that we need for our application
-        self.only_info = ['Timestamp', 'Src IP', 'Dst IP']
+        # Info that we need for our application which is not included at prediction time
+        # self.only_info = ['Timestamp', 'Src IP', 'Dst IP']
         # Save to join them later
-        self.df_info = self.df[self.only_info]
+        # self.df_info = self.df[self.only_info]
 
-        standard = list( set(self.df_predict.columns) - set(not_standard))
-        self.df_predict = standardize_one(self.df_predict, standard, not_standard) # Standardize
+        # standard = list( set(self.df_predict.columns) - set(not_standard))
+        # self.df_predict = standardize_one(self.df_predict, standard, not_standard) # Standardize
         return
 
     def predict(self):
         x_set = self.df_predict.loc[:, self.df_predict.columns != 'Label']
-        translator = np.vectorize(lambda x: 'Attack' if x == 1 or x == '1' else 'Benign')
+        translator = np.vectorize(lambda x: 'Attack' if x == 1 else 'Benign')
+        # translator = np.vectorize(lambda x: 'Attack ' + "{:.2f}".format(float(x)) if x >= _LIMIT else 'Benign ' + "{:.2f}".format(float(x)))
         self.df['Label'] = translator(self.model.predict(x_set))
         return
 
@@ -106,4 +96,5 @@ def main():
 
 
 if __name__ == '__main__':
+    print("hello")
     main()

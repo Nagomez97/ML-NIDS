@@ -6,4 +6,4 @@ WORKDIR /usr/src
 ADD ./frontend/ /usr/src
 
 # If you are building your code for production
-RUN npm install
+RUN npm install /usr/src

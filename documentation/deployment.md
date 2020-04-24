@@ -20,54 +20,57 @@ NIDS **must** be run on a Linux system. This is because the containers use the _
 This is based on the [Docker docs](https://docs.docker.com/install/linux/docker-ce/ubuntu/) for Ubuntu. 
 
 ```
-$ sudo apt-get install \
+sudo apt-get install \
     apt-transport-https \
     ca-certificates \
     curl \
     gnupg-agent \
     software-properties-common
 
-$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
-$ sudo add-apt-repository \
+sudo add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
    $(lsb_release -cs) \
    stable"
 
-$ sudo apt-get update
+sudo apt-get update
 
-$ sudo apt-get install docker-ce docker-ce-cli containerd.io
+sudo apt-get install docker-ce docker-ce-cli containerd.io
 
-$ sudo docker run hello-world
+sudo docker run hello-world
 
 ```
 
 ## 2. Install docker-compose
 Once you have installed the docker engine, run the following commands:
 ```
-$ sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
-$ sudo chmod +x /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
 
-$ docker-compose --version
+docker-compose --version
 ```
 
 ## 3. Install NodeJS and npm
 ```
-$ curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
-$ sudo apt-get install -y nodejs
+curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+sudo apt-get install -y nodejs
 
 # Check installation
-$ node -v
-$ npm -v
+node -v
+npm -v
 ```
 
 ## (REALLY IMPORTANT!) Change environment variables
 At **docker_config/dev/**, there are two _.env_ files containing the database usernames and passwords. These are example files, so you **MUST** change its content. Set new credentials on both files before launching Vision.
 
 ## 5. Run
-To finish our deployment, you should run
+To finish our deployment, you should clone the repo and cd into it. If you installed docker without enough permission, the docker-compose commands should be run as _sudo_.
 ```
+git clone https://github.com/Nagomez97/ML-NIDS.git
+cd ML-NIDS
+sudo service docker start
 docker-compose build
 docker-compose up
 ```

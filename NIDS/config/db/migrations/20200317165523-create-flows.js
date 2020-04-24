@@ -20,6 +20,12 @@ module.exports = {
       label: {
         type: Sequelize.STRING
       },
+      len_fwd: {
+        type: Sequelize.FLOAT
+      },
+      len_bwd: {
+        type: Sequelize.FLOAT
+      },
       timestamp: {
         type: Sequelize.STRING
       },
