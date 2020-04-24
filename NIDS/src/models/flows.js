@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     timestamp: DataTypes.STRING
   }, {});
   flows.associate = function(models) {
-    // associations can be defined here
   };
   return flows;
 };

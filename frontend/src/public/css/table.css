@@ -143,3 +143,13 @@ button.send-hour:hover {
 .glyphicon-play {
     color: #4ccf07;
 }
+
+.options-btn-container {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+.options-btn-container .btn {
+    background-color: red;
+}

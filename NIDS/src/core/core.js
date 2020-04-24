@@ -3,6 +3,7 @@ const sniffer = require('../sniffer/sniffer');
 const networks = require('../utils/networks');
 const system = require('../utils/system');
 const Flows = require('../database/flows');
+const Targets = require('../database/targets');
 const Utils = require('../utils/hours');
 
 const _temp = `${__dirname}/../temp/`;
@@ -446,6 +447,44 @@ async function getAttacksIPData(req, res){
 
 }
 
+/**
+ * Creates a target given an IP
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
+async function setTarget(req, res){
+    var ip = req.body.ip;
+    console.log(req.body)
+    if(ip == null){
+        logger.error(`CORE \t\t Empty ip whet setting target`);
+        return res.status(400);
+    }
+
+    Targets.setIPTarget(ip);
+    logger.info(`CORE \t\t Target ${ip} added`)
+    return res.status(200);
+}
+
+/**
+ * Removes a target given an IP
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
+async function removeTarget(req, res){
+    var ip = req.body.ip;
+    if(ip == null){
+        logger.error(`CORE \t\t Empty ip whet deleting target`);
+        return res.status(400);
+    }
+
+    Targets.removeIPTarget(ip);
+    return res.status(200);
+}
+
 
 
 module.exports = {
@@ -459,5 +498,7 @@ module.exports = {
     getInterfaces,
     getTimeTrafficData,
     getIPTrafficData,
-    getAttacksIPData
+    getAttacksIPData,
+    setTarget,
+    removeTarget
 }

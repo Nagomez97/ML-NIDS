@@ -12,6 +12,10 @@ Vue.component('left_menu', {
           <a href="#" @click="$emit('changeview', 'chart-dashboard')" :class="{ 'open' : view == 'chart-dashboard' }"><i data-feather='bar-chart-2' width='50' height='50' stroke-width='4' class="left-menu-icon"></i></a>
       </div>
 
+      <div class="left-menu-item">
+          <a href="#" @click="$emit('changeview', 'options')" :class="{ 'open' : view == 'options' }"><i data-feather='crosshair' width='45' height='45' stroke-width='2' class="left-menu-icon"></i></a>
+      </div>
+
     </div>
   `
 })
@@ -79,6 +83,15 @@ Vue.component('table-dashboard', {
           $('#play-button').removeClass('glyphicon-play');
           $('#play-button').addClass('glyphicon-pause');
         }
+      },
+      setTarget: function(){
+        var ip = $('#modal-ip').text()
+        $.ajax({
+          type: "POST",
+          url: "http://localhost:8080/api/ddbb/ips/setTarget",
+          data: {ip: ip},
+          dataType: 'json'
+        })
       }
     },
     mounted () {
@@ -98,6 +111,11 @@ Vue.component('table-dashboard', {
         pageLength: 100
       });
 
+      $(document).on('click', '#flowTable tbody tr', function() {
+        $("#modal-ip").text($(this)[0].cells[0].innerText);
+        $("#hostModal").modal("show");
+      })
+
       $('.dataTables_length').addClass('bs-select');
       var vm = this;
       setInterval( function () {
@@ -108,6 +126,28 @@ Vue.component('table-dashboard', {
     },
     template: `
         <div class="container">
+            <!-- Modal -->
+            <div id="hostModal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+            
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="modal-ip">Host Settings</h4>
+                  </div>
+                  <div class="modal-body">                    
+                    <p>Send host to Targets?</p>
+                  </div>
+                  <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal" @click="setTarget">Set Target</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+            
+              </div>
+            </div>
+
             <div class="table-outter">
               <table class="table" id="flowTable">
                 <thead class="thead-dark">
