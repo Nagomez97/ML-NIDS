@@ -90,6 +90,7 @@ Vue.component('table-dashboard', {
           type: "POST",
           url: "http://localhost:8080/api/ddbb/ips/setTarget",
           data: {ip: ip},
+          
           dataType: 'json'
         })
       }
@@ -501,6 +502,71 @@ Vue.component('attacks-ip', {
     `
     })
 
+    // Table dashboard
+Vue.component('options', {
+  props: ['view'],
+  data: function (){
+    return {
+      targets: []
+    }
+  },
+  methods: {
+  },
+  async created () {
+    const targets = await axios.get(`http://localhost:8080/api/ddbb/ips/getTargets`);
+    if(targets){
+      this.targets = targets.data.targets;
+    }
+  },
+  async mounted() {
+    const targets = await axios.get(`http://localhost:8080/api/ddbb/ips/getTargets`);
+    if(targets){
+      this.targets = targets.data.targets;
+    }
+  },
+  template: `
+      <div class="container">
+          <div class="options-ip-container dataTables_scroll">
+
+            <div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px none; width: 100%;">
+              <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 100%; padding-right: 16px;">
+                <table class="table dataTable no-footer" role="grid" style="margin-left: 0px;width: 100%">
+                  <thead class="thead-dark">
+                    <tr role="row">
+                      <th scope="col" tabindex="0" rowspan="1" colspan="1" style="width: 25%"> IP source </th>
+                      <th scope="col" tabindex="0" rowspan="1" colspan="1" style="width: 25%"> % attacks last hour </th>
+                      <th scope="col" tabindex="0" rowspan="1" colspan="1" style="width: 25%"> Status </th>
+                      <th scope="col" tabindex="0" rowspan="1" colspan="1" style="width: 25%"> Options </th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+            </div>
+
+            <div class="dataTables_scrollBody" style="position: relative; overflow: auto; max-height: 50vh; width: 100%;">
+              <table class="table dataTable no-footer" role="grid" style="width: 100%">
+                <thead class="thead-dark">
+                  <tr role="row" style="height: 0px;"> 
+                    <th class="col-width"> </th>
+                    <th class="col-width"> </th>
+                    <th class="col-width"> </th>
+                    <th class="col-width"> </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="target in targets" role="row" class="even">
+                    <td class="options-element"> {{target.ip}} </td>
+                    <td class="options-element"> {{target.stat}} </td>
+                    <td class="options-element"> placeholder </td>
+                    <td class="options-element"> placeholder </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </div>
+  `
+});
 
 
 // App

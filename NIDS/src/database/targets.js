@@ -1,6 +1,8 @@
 const Targets = require('../models/index').targets;
+const Flows = require('../models/index').flows;
 const logger = require('../../config/log/logsConfig');
 const { Op } = require("sequelize");
+const sequelize = require('sequelize');
 
 /**
  * Returns a target by its IP
@@ -16,6 +18,26 @@ async function getTarget(ip){
 
     var res = Targets.findOne({
         attributes: ['ip', 'blocked'],
+        where : {
+            ip : ip
+        }
+    }).catch(err => {
+        logger.error(`DDBB \t\t Error retrieving targets.`);
+    })
+
+    return res;
+}
+
+/**
+ * Returns targets
+ *
+ * @param {*} ip
+ * @returns
+ */
+async function getTargets(){
+
+    var res = Targets.findAll({
+        attributes: ['ip', 'blocked']
     }).catch(err => {
         logger.error(`DDBB \t\t Error retrieving targets.`);
     })
@@ -78,8 +100,81 @@ async function removeIPTarget(ip){
 
 }
 
+/**
+ *Returns the number of benign flows for the given IP
+ *
+ * @param {*} ip
+ */
+async function countFlows(ips, fromHour){
+    var res = await Flows.findAll({
+        attributes: ['ip_src', 'label', [sequelize.fn('count', sequelize.col('label')), 'count']],
+        group : ['ip_src', 'label'],
+        raw: true,
+        where: {
+            ip_src: ips,
+            timestamp : {
+                [Op.gte]: fromHour
+            }
+        }
+    }).then(res => {
+        var results = {};
+        res.map(count => {
+            if(results[count.ip_src] == null){
+                results[count.ip_src] = {}
+            }
+            if(count.label == 'Benign'){
+                results[count.ip_src]['benigns'] = count.count;
+            }
+            else{
+                results[count.ip_src]['attacks'] = count.count;
+            }
+        })
+
+        return results;
+    })
+
+    res = Object.keys(res).map(key => {
+        var ob = {
+            ip: key,
+            attacks: res[key]['attacks'],
+            benigns: res[key]['benigns']
+        };
+        if(ob['benigns'] == undefined){
+            ob['benigns'] = 0;
+        }
+        return ob;
+    })
+
+    return res;
+
+}
+
+/**
+ * Return an array with every target and its attack per hour
+ *
+ * @param {*} targets
+ */
+async function attacksPerHour(fromHour){
+    var targets = await getTargets();
+    var ips = targets.map(target => {
+        return target.ip;
+    })
+
+    var counts = await countFlows(ips, fromHour);
+
+    var stats = counts.map(ob => {
+        var stat = (ob['attacks'] / (ob['attacks'] + ob['benigns']) * 100).toFixed(2);
+        return {ip: ob['ip'], stat: stat}
+    })
+
+    return stats
+
+}
+
 module.exports ={
     getTarget,
+    getTargets,
     setIPTarget,
-    removeIPTarget
+    removeIPTarget,
+    attacksPerHour
 }

@@ -456,7 +456,6 @@ async function getAttacksIPData(req, res){
  */
 async function setTarget(req, res){
     var ip = req.body.ip;
-    console.log(req.body)
     if(ip == null){
         logger.error(`CORE \t\t Empty ip whet setting target`);
         return res.status(400);
@@ -464,7 +463,7 @@ async function setTarget(req, res){
 
     Targets.setIPTarget(ip);
     logger.info(`CORE \t\t Target ${ip} added`)
-    return res.status(200);
+    return res.status(200).json({'response': 'ok'});
 }
 
 /**
@@ -482,7 +481,23 @@ async function removeTarget(req, res){
     }
 
     Targets.removeIPTarget(ip);
-    return res.status(200);
+    return res.status(200).json({'response': 'ok'});
+}
+
+/**
+ * Returns targets
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
+async function getTargets(req, res){
+
+    var fromHour = Utils.getLastHour();
+
+    var targets = await Targets.attacksPerHour(fromHour);
+    logger.info(`CORE \t\t Targets required`)
+    return res.status(200).json({'targets': targets});
 }
 
 
@@ -500,5 +515,6 @@ module.exports = {
     getIPTrafficData,
     getAttacksIPData,
     setTarget,
+    getTargets,
     removeTarget
 }
