@@ -247,7 +247,7 @@ async function getTimeTrafficData(req, res){
     chartData = {}
 
     flows = flows.map(flow => {
-        flow.len = flow.len_fwd + flow.len_bwd
+        flow.len = parseFloat(((flow.len_fwd + flow.len_bwd) / 1000000).toFixed(2))
         flow.timestamp = flow.timestamp.substring(0, flow.timestamp.length - 3) // Remove seconds
 
         if(chartData[flow.timestamp] == null){
@@ -257,7 +257,7 @@ async function getTimeTrafficData(req, res){
             }
         }
         else {
-            chartData[flow.timestamp].len += flow.len
+            chartData[flow.timestamp].len = parseFloat(chartData[flow.timestamp].len) + flow.len
         }
 
         return flow
@@ -288,14 +288,15 @@ async function getIPTrafficData(req, res){
         chartData = {}
 
         flows = flows.map(flow => {
-            flow.len = flow.len_fwd + flow.len_bwd
+            // len in Mb
+            flow.len = parseFloat(((flow.len_fwd + flow.len_bwd) / 1000000).toFixed(2))
             flow.ip_src = flow.ip_src
 
             if(chartData[flow.ip_src] == null){
                 chartData[flow.ip_src] = flow.len
             }
             else {
-                chartData[flow.ip_src].len += flow.len
+                chartData[flow.ip_src] = parseFloat(chartData[flow.ip_src]) + flow.len
             }
 
             return flow
@@ -345,6 +346,108 @@ async function getIPTrafficData(req, res){
 
 }
 
+/**
+ * Returns data for the Attacks/IP chart
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
+async function getAttacksIPData(req, res){
+    var hour = req.query.hour; // integer between 0-23
+    var flows = []
+
+    if(hour == '-1' || hour == null || hour == 'Now'){
+        var fromHour = Utils.getLastHour();
+
+        flows = await Flows.getFlowsFromHour(fromHour);
+
+        chartData = {}
+        raw_data = {}
+
+        flows = flows.map(flow => {
+            // Ammount of attacks
+
+            if(raw_data[flow.ip_src] == null){
+                raw_data[flow.ip_src] = {
+                    'attacks': 0,
+                    'benigns': 0
+                }
+            }
+            if(flow['label'] == 'Attack'){
+                raw_data[flow.ip_src]['attacks'] += 1;
+            }
+            else{
+                raw_data[flow.ip_src]['benigns'] += 1;
+            }
+
+            return flow
+        })
+
+        // Real chart data in %
+        Object.keys(raw_data).map(ip => {
+            chartData[ip] = raw_data[ip]['attacks'] /  (raw_data[ip]['benigns'] + raw_data[ip]['attacks']) * 100;
+            return ip;
+        })
+        
+        return res.status(200).json({
+            'chartData': chartData
+        })
+    }
+
+    if(hour % 1 != 0 || hour > 23 || hour < 0){ // Checks if hour is an integer and between 0 and 23
+        return res.status(400).json({
+            'flows': []
+        });
+    }
+    
+    var fromHour = Utils.get24DateFromHour(hour);
+    var toHour = Utils.get24DateToHour((parseInt(hour, 10) + 1) % 24);
+
+    logger.debug(`CORE \t\t Requested flows between ${fromHour} and ${toHour}`);
+
+
+    flows = await Flows.getFlowsByInterval(fromHour, toHour);
+
+    // Once we have all the flows within an hour, we want to group them on every minute
+    // and sum the amount of data sent within that minute.
+
+    chartData = {}
+    raw_data = {}
+
+    flows = flows.map(flow => {
+        // Ammount of attacks
+
+        if(raw_data[flow.ip_src] == null){
+            raw_data[flow.ip_src] = {
+                'attacks': 0,
+                'benigns': 0
+            }
+        }
+        if(flow['label'] == 'Attack'){
+            raw_data[flow.ip_src]['attacks'] += 1;
+        }
+        else{
+            raw_data[flow.ip_src]['benigns'] += 1;
+        }
+
+        return flow
+    })
+
+    // Real chart data in %
+    Object.keys(raw_data).map(ip => {
+        chartData[ip] = raw_data[ip]['attacks'] /  (raw_data[ip]['benigns'] + raw_data[ip]['attacks']) * 100;
+        return ip;
+    })
+    
+    return res.status(200).json({
+        'chartData': chartData
+    })
+
+}
+
+
+
 module.exports = {
     startSniffer,
     stopSniffer,
@@ -355,5 +458,6 @@ module.exports = {
     isRunning,
     getInterfaces,
     getTimeTrafficData,
-    getIPTrafficData
+    getIPTrafficData,
+    getAttacksIPData
 }

@@ -19,6 +19,7 @@ function setRoutes(app) {
     app.get('/api/ddbb/flows/getCurrentHour', core.getCurrentHour);
     app.get('/api/ddbb/flows/getChartTrafficTime', core.getTimeTrafficData);
     app.get('/api/ddbb/flows/getIPTrafficData', core.getIPTrafficData);
+    app.get('/api/ddbb/flows/getAttacksIPData', core.getAttacksIPData);
 
 
 

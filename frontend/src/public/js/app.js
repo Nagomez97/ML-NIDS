@@ -185,7 +185,7 @@ Vue.component('traffic-time', {
     var data = {
       labels: [],
       datasets: [{
-        label: 'Flow length (bytes)',
+        label: 'Flow length (Mb)',
         data: []
       }]
     }
@@ -311,7 +311,7 @@ Vue.component('traffic-ip', {
     var data = {
       labels: [],
       datasets: [{
-        label: 'Flow length (bytes)',
+        label: 'Flow length (Mb)',
         data: [],
         backgroundColor: 'rgba(237,240,241,0.8)'
       }]
@@ -354,24 +354,11 @@ Vue.component('traffic-ip', {
       $.ajax({
         url: 'http://localhost:8080/api/ddbb/flows/getIPTrafficData',
         success: function(data) {
-          var oldLabels = myChart.data.labels;
 
           data = data.chartData;
 
           myChart.data.labels = Object.keys(data);
-          myChart.data.datasets[0].data = Object.values(data);
-
-          // // Add new data
-          // Object.keys(data).map(ip_src => {
-          //   if(!oldLabels.includes(ip_src)){
-          //     myChart.data.labels.push(ip_src);
-          //     myChart.data.datasets[0].data.push(data[ip_src].len);
-          //   }
-          //   else{
-          //     var index = myChart.data.labels.indexOf(ip_src);
-          //     myChart.data.datasets[0].data[index] = data[ip_src].len
-          //   }
-          // })  
+          myChart.data.datasets[0].data = Object.values(data); 
           
           
           // re-render the chart
@@ -394,17 +381,87 @@ Vue.component('traffic-ip', {
   `
 })
 
-// Traffic/Time chart
+// Attacks/IP chart
 Vue.component('attacks-ip', {
   props: [],
   mounted() {
+    var data = {
+      labels: [],
+      datasets: [{
+        label: '% of packets labeled as Attack',
+        data: [],
+        backgroundColor: 'rgba(144,2,2,0.8)'
+      }]
+    }
 
-  },
-  template: `
-      <a class="color: white;"> Attacks/IP chart. Building. </a>
-  
-  `
-})
+    var ctx = document.getElementById('attacks-ip-chart').getContext('2d');
+    var myChartAttack = new Chart(ctx, {
+      type: 'bar',
+      data: data,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        },
+        scales: {
+          yAxes: [{ 
+              gridLines: {
+                color: 'rgba(60,60,60,0.6)'
+              },
+              ticks: {
+                fontColor: 'rgba(237,240,241,0.8)', // this here
+              },
+          }],
+          xAxes: [{
+              display: false,
+              gridLines: {
+                  display: false,
+              },
+          }],
+        }
+      }
+    });
+
+    var getData = function() {
+      $.ajax({
+        url: 'http://localhost:8080/api/ddbb/flows/getAttacksIPData',
+        success: function(data) {
+          // var oldLabels = myChart.data.labels;
+          myChartAttack.data.labels = [];
+          myChartAttack.data.datasets[0].data = []
+          data = data.chartData;
+
+          myChartAttack.data.labels = Object.keys(data);
+          myChartAttack.data.datasets[0].data = Object.values(data);
+          
+          
+          
+          // re-render the chart
+          myChartAttack.update();
+        }
+      });
+    };
+    
+    getData();
+    
+    // get new data every 3 seconds
+    setInterval(getData, 15000);
+    
+    },
+    template: `
+      <div class="chart-container" width="400px" height="400px"> 
+        <canvas id="attacks-ip-chart" width="400px" height="400px"></canvas>
+      </div>
+    
+    `
+    })
+
+
 
 // App
 new Vue({
