@@ -38,6 +38,8 @@ async function getTargets(){
 
     var res = Targets.findAll({
         attributes: ['ip', 'blocked']
+    }).then(res => {
+        return res.map(x => {return x.dataValues})
     }).catch(err => {
         logger.error(`DDBB \t\t Error retrieving targets.`);
     })
@@ -87,6 +89,9 @@ async function removeIPTarget(ip){
 
     var found = await getTarget(ip);
     // If does exist, removes it
+    if(found == null || found == undefined){
+        return;
+    }
     if(found != null || found.length == 1){
         Targets.destroy({
             where : {ip : ip}
@@ -133,16 +138,10 @@ async function countFlows(ips, fromHour){
         return results;
     })
 
-    res = Object.keys(res).map(key => {
-        var ob = {
-            ip: key,
-            attacks: res[key]['attacks'],
-            benigns: res[key]['benigns']
-        };
-        if(ob['benigns'] == undefined){
-            ob['benigns'] = 0;
+    Object.keys(res).map(key => {
+        if(res[key]['benigns'] == undefined){
+            res[key]['benigns'] = 0;
         }
-        return ob;
     })
 
     return res;
@@ -162,10 +161,19 @@ async function attacksPerHour(fromHour){
 
     var counts = await countFlows(ips, fromHour);
 
-    var stats = counts.map(ob => {
-        var stat = (ob['attacks'] / (ob['attacks'] + ob['benigns']) * 100).toFixed(2);
-        return {ip: ob['ip'], stat: stat}
+    var stats = targets.map(ob => {
+        var ip = ob['ip'];
+        if(counts[ip] != null){
+            count = counts[ip];
+            var stat = (count['attacks'] / (count['attacks'] + count['benigns']) * 100).toFixed(2);
+        }
+        else {
+            var stat = 0;
+        }
+        
+        return {ip: ip, stat: stat, blocked: ob['blocked']}
     })
+
 
     return stats
 

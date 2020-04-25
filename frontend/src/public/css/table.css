@@ -18,7 +18,12 @@ td {
      font-weight: 500;
      font-size: 20px;
      color: #edf0f1;
- }
+}
+     
+
+table.dataTable thead th {
+    padding: 8px 8px;
+}
 
  #flowTable_info, #flowTable_previous, #flowTable_next {
     font-family: "Montserrat", sans-serif;
