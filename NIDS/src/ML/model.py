@@ -13,7 +13,7 @@ pickle_file = str(pathlib.Path(__file__).parent.absolute()) + '/pickles/LogReg_1
 not_standard = ['Label']
 
 # If prob >= LIMIT then it is considered attack
-_LIMIT = 0.85
+_LIMIT = 0.95
 
 
 ##############################
@@ -51,7 +51,11 @@ class Model:
             self.model = pickle.load(f)
 
         # Loads CSV
-        self.df = pd.read_csv(filename, sep=",", header=0, index_col=None, low_memory=False)
+        try:
+            self.df = pd.read_csv(filename, sep=",", header=0, index_col=None, low_memory=False)
+        except:
+            print("File not found")
+            exit(3)
 
         self.filename = filename
         return
@@ -71,10 +75,16 @@ class Model:
         return
 
     def predict(self):
-        x_set = self.df_predict.loc[:, self.df_predict.columns != 'Label']
-        translator = np.vectorize(lambda x: 'Attack' if x == 1 else 'Benign')
-        # translator = np.vectorize(lambda x: 'Attack ' + "{:.2f}".format(float(x)) if x >= _LIMIT else 'Benign ' + "{:.2f}".format(float(x)))
-        self.df['Label'] = translator(self.model.predict(x_set))
+        try:
+            x_set = self.df_predict.loc[:, self.df_predict.columns != 'Label']
+            # translator = np.vectorize(lambda x: 'Attack' if x == 1 else 'Benign')
+            # translator = np.vectorize(lambda x: 'Attack ' + "{:.2f}".format(float(x)) if x >= _LIMIT else 'Benign ' + "{:.2f}".format(float(x)))
+            translator = np.vectorize(lambda x: 'Attack' if x >= _LIMIT else 'Benign')
+            # self.df['Label'] = translator(self.model.predict(x_set))
+            self.df['Label'] = translator(self.model.predict_proba(x_set))
+        except:
+            exit(4)
+
         return
 
     def save_df(self):
@@ -96,5 +106,4 @@ def main():
 
 
 if __name__ == '__main__':
-    print("hello")
     main()

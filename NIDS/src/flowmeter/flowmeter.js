@@ -17,6 +17,7 @@ const csvs = `${__dirname}/../temp/csv/`;
 async function flowmeter(filename){
     var out = csvs + filename.split('/').pop().replace('.pcap', '.pcap_Flow.csv');
     var command = [`${filename}`, `${csvs}`]
+
     var child = spawn(`${__dirname}/bin/cfm`, command, {
         shell: true
     });
@@ -37,7 +38,7 @@ async function flowmeter(filename){
                 system.remove_file(filename);
                 return -1;
             default:
-                logger.debug(`FLOWMETER \t Finished. Saved as ${out}`);
+                logger.debug(`FLOWMETER \t Finished code ${code}. Saved as ${out}`);
                 predictML(out);
                 system.remove_file(filename); // Remove pcap to avoid space waste
                 return 0;

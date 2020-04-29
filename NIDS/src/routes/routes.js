@@ -24,7 +24,8 @@ function setRoutes(app) {
     // Targets
     app.post('/api/ddbb/ips/setTarget', core.setTarget);
     app.post('/api/ddbb/ips/removeTarget', core.removeTarget);
-
+    app.get('/api/ddbb/ips/getTargets', core.getTargets);
+    app.post('/api/ddbb/ips/isTargeted', core.isTargeted);
 
 
     
