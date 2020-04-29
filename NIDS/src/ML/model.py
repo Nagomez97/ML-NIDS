@@ -13,7 +13,7 @@ pickle_file = str(pathlib.Path(__file__).parent.absolute()) + '/pickles/LogReg_1
 not_standard = ['Label']
 
 # If prob >= LIMIT then it is considered attack
-_LIMIT = 0.95
+_LIMIT = 0.90
 
 
 ##############################

@@ -142,6 +142,9 @@ async function countFlows(ips, fromHour){
         if(res[key]['benigns'] == undefined){
             res[key]['benigns'] = 0;
         }
+        else if(res[key]['attacks'] == undefined){
+            res[key]['attacks'] = 0;
+        }
     })
 
     return res;
@@ -160,7 +163,7 @@ async function attacksPerHour(fromHour){
     })
 
     var counts = await countFlows(ips, fromHour);
-
+    console.log(counts)
     var stats = targets.map(ob => {
         var ip = ob['ip'];
         if(counts[ip] != null){
