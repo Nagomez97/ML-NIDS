@@ -18,10 +18,8 @@ async function flowmeter(filename){
     var out = csvs + filename.split('/').pop().replace('.pcap', '.pcap_Flow.csv');
     var command = [`${filename}`, `${csvs}`]
 
-    console.log(`${__dirname}/bin/cfm ${command}`)
     var child = spawn(`${__dirname}/bin/cfm`, command, {
-        shell: true,
-        stdio: [null, process.stderr, process.stderr]
+        shell: true
     });
 
     child.on('error', async (code) => {
@@ -33,16 +31,16 @@ async function flowmeter(filename){
         switch (code) {
             case 2:
                 logger.error(`FLOWMETER \t Exit code 2`);
-                // system.remove_file(filename);
+                system.remove_file(filename);
                 return -1;
             case 1:
                 logger.error(`FLOWMETER \t Exit code 1`);
-                // system.remove_file(filename);
+                system.remove_file(filename);
                 return -1;
             default:
                 logger.debug(`FLOWMETER \t Finished code ${code}. Saved as ${out}`);
                 predictML(out);
-                // system.remove_file(filename); // Remove pcap to avoid space waste
+                system.remove_file(filename); // Remove pcap to avoid space waste
                 return 0;
         }
     })
