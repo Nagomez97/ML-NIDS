@@ -10,7 +10,10 @@ const path = require('path');
  */
 function create_file(filename){
     try{
-        fs.closeSync(fs.openSync(filename, 'w'));
+        // fs.closeSync(fs.openSync(filename, 'w'));
+        fs.writeFileSync(filename, "", (err) => {
+            logger.error(`SYSTEM \t Error creating file. ${filename}. ${err}`)
+        })
         fs.chmodSync(filename, 0766);
     } catch(err){
         logger.error(`SYSTEM \t\t Eror creating file ${filename}. ${err}`);

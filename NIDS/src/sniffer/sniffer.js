@@ -25,7 +25,7 @@ async function sniff(iface, duration){
 
     await system.create_file(filename); // We need to create the file first. Tshark issue
 
-    logger.debug(`SNIFFER \t Launching tshark...`)
+    logger.debug(`SNIFFER \t Launching tshark... > ${filename}`)
 
     _child.process = await tshark(iface, duration, filename);
     _child.status = 'RUNNING';
