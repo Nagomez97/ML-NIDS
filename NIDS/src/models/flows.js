@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     ip_dst: DataTypes.STRING,
     port_dst: DataTypes.STRING,
     label: DataTypes.STRING,
+    prob: DataTypes.FLOAT,
     len_fwd: DataTypes.FLOAT,
     len_bwd: DataTypes.FLOAT,
     timestamp: DataTypes.STRING
