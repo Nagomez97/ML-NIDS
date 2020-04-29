@@ -158,3 +158,15 @@ button.send-hour:hover {
 .options-btn-container .btn {
     background-color: red;
 }
+
+.disabled-button {
+    background-color: lightslategray;
+    color: #edf0f1;
+    cursor: auto;
+}
+
+.disabled-button:hover {
+    background-color: lightslategray!important;
+    color: #edf0f1!important;
+    cursor: auto;
+}

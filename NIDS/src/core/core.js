@@ -501,6 +501,30 @@ async function getTargets(req, res){
 }
 
 
+/**
+ * Returns true if a host is already targeted
+ *
+ * @param {*} req
+ * @param {*} res
+ */
+async function isTargeted(req, res){
+    var ip = req.body.ip;
+
+    if(ip == null){
+        logger.error(`CORE \t\t Empty ip when asking for target`);
+        return res.status(400);
+    }
+
+    var isTargeted = await Targets.isTargeted(ip);
+    if(isTargeted == true){
+        return res.status(200).json({'targeted': true})
+    }
+    else{
+        return res.status(200).json({'targeted': false})
+    }
+}
+
+
 
 module.exports = {
     startSniffer,
@@ -516,5 +540,6 @@ module.exports = {
     getAttacksIPData,
     setTarget,
     getTargets,
-    removeTarget
+    removeTarget,
+    isTargeted
 }

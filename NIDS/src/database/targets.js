@@ -16,7 +16,7 @@ async function getTarget(ip){
         return null;
     }
 
-    var res = Targets.findOne({
+    var res = await Targets.findOne({
         attributes: ['ip', 'blocked'],
         where : {
             ip : ip
@@ -36,7 +36,7 @@ async function getTarget(ip){
  */
 async function getTargets(){
 
-    var res = Targets.findAll({
+    var res = await Targets.findAll({
         attributes: ['ip', 'blocked']
     }).then(res => {
         return res.map(x => {return x.dataValues})
@@ -179,10 +179,22 @@ async function attacksPerHour(fromHour){
 
 }
 
+/**
+ *Returns true if a host is already targeted
+ *
+ * @param {*} ip
+ */
+async function isTargeted(ip){
+    var target = await getTarget(ip);
+
+    return target != null;
+}
+
 module.exports ={
     getTarget,
     getTargets,
     setIPTarget,
     removeIPTarget,
-    attacksPerHour
+    attacksPerHour,
+    isTargeted
 }
