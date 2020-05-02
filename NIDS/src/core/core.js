@@ -37,7 +37,7 @@ async function startSniffer(req, res){
         })
     }
 
-    logger.info(`CORE \t\t Starting sniffer on interface ${iface}...`);
+    logger.info(`CORE \t\t Starting sniffer on interface ${iface} each ${timeout} seconds...`);
 
     sniffer.sniff(iface, timeout);
     _running = true
