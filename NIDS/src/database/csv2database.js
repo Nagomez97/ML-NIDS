@@ -17,7 +17,8 @@ function csv2ddbb(filename){
                 timestamp: row['Timestamp'],
                 len_fwd: row['TotLen Fwd Pkts'],
                 len_bwd: row['TotLen Bwd Pkts'],
-                label: row['Label']
+                label: row['Label'],
+                prob: row['Prob']
             }
             // Timestamp format to be ordered on ddbb
             // yyyy/mm/dd hh:mm:ss

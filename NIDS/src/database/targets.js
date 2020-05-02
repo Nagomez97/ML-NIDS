@@ -127,7 +127,7 @@ async function countFlows(ips, fromHour){
             if(results[count.ip_src] == null){
                 results[count.ip_src] = {}
             }
-            if(count.label == 'Benign'){
+            if(count.label.includes('Benign')){
                 results[count.ip_src]['benigns'] = count.count;
             }
             else{
@@ -138,9 +138,13 @@ async function countFlows(ips, fromHour){
         return results;
     })
 
+
     Object.keys(res).map(key => {
         if(res[key]['benigns'] == undefined){
             res[key]['benigns'] = 0;
+        }
+        else if(res[key]['attacks'] == undefined){
+            res[key]['attacks'] = 0;
         }
     })
 
@@ -160,7 +164,6 @@ async function attacksPerHour(fromHour){
     })
 
     var counts = await countFlows(ips, fromHour);
-
     var stats = targets.map(ob => {
         var ip = ob['ip'];
         if(counts[ip] != null){
