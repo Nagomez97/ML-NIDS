@@ -13,6 +13,7 @@
         <link rel="stylesheet" type="text/css" href="/css/table.css">
         <link rel="stylesheet" type="text/css" href="/css/leftMenu.css">
         <link rel="stylesheet" type="text/css" href="/css/charts.css">
+        <link rel="stylesheet" type="text/css" href="/css/options.css">
 
         <!-- jQuery library -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -57,9 +58,9 @@
             <left_menu v-bind:view='open_view' v-on:changeview="updateView($event)"></left_menu>
             
             <main class="dashboard" id="dashboard">
-                <keep-alive>
+                <!-- <keep-alive> -->
                     <component v-bind:is="open_view" v-bind:chart="chart_type" v-on:changechart="changeChart($event)"></component>
-                </keep-alive>
+                <!-- </keep-alive> -->
             </main>
             <footer class="footer">
                 <ul class="nav_links">

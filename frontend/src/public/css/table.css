@@ -18,7 +18,12 @@ td {
      font-weight: 500;
      font-size: 20px;
      color: #edf0f1;
- }
+}
+     
+
+table.dataTable thead th {
+    padding: 8px 8px;
+}
 
  #flowTable_info, #flowTable_previous, #flowTable_next {
     font-family: "Montserrat", sans-serif;
@@ -142,4 +147,26 @@ button.send-hour:hover {
 
 .glyphicon-play {
     color: #4ccf07;
+}
+
+.options-btn-container {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+.options-btn-container .btn {
+    background-color: red;
+}
+
+.disabled-button {
+    background-color: lightslategray;
+    color: #edf0f1;
+    cursor: auto;
+}
+
+.disabled-button:hover {
+    background-color: lightslategray!important;
+    color: #edf0f1!important;
+    cursor: auto;
 }

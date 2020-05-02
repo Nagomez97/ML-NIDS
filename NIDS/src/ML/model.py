@@ -13,7 +13,7 @@ pickle_file = str(pathlib.Path(__file__).parent.absolute()) + '/pickles/LogReg_1
 not_standard = ['Label']
 
 # If prob >= LIMIT then it is considered attack
-_LIMIT = 0.85
+_LIMIT = 0.90
 
 
 ##############################
@@ -51,7 +51,11 @@ class Model:
             self.model = pickle.load(f)
 
         # Loads CSV
-        self.df = pd.read_csv(filename, sep=",", header=0, index_col=None, low_memory=False)
+        try:
+            self.df = pd.read_csv(filename, sep=",", header=0, index_col=None, low_memory=False)
+        except:
+            print("File not found")
+            exit(3)
 
         self.filename = filename
         return
@@ -60,21 +64,21 @@ class Model:
         # We only want some columns.
         # This is the dataframe used to predict, which will need standardization
         self.df_predict = self.df[self.model.data_header]
-
-        # Info that we need for our application which is not included at prediction time
-        # self.only_info = ['Timestamp', 'Src IP', 'Dst IP']
-        # Save to join them later
-        # self.df_info = self.df[self.only_info]
-
-        # standard = list( set(self.df_predict.columns) - set(not_standard))
-        # self.df_predict = standardize_one(self.df_predict, standard, not_standard) # Standardize
         return
 
     def predict(self):
-        x_set = self.df_predict.loc[:, self.df_predict.columns != 'Label']
-        translator = np.vectorize(lambda x: 'Attack' if x == 1 else 'Benign')
-        # translator = np.vectorize(lambda x: 'Attack ' + "{:.2f}".format(float(x)) if x >= _LIMIT else 'Benign ' + "{:.2f}".format(float(x)))
-        self.df['Label'] = translator(self.model.predict(x_set))
+        try:
+            x_set = self.df_predict.loc[:, self.df_predict.columns != 'Label']
+            
+            labeler = np.vectorize(lambda x: 'Attack' if x >= _LIMIT else 'Benign')
+
+            prediction = self.model.predict_proba(x_set)[:,1]
+            self.df['Label'] = labeler(prediction)
+            self.df['Prob'] =  prediction
+        except Exception:
+            print("Error in prediction: " + Exception)
+            exit(4)
+
         return
 
     def save_df(self):
@@ -96,5 +100,4 @@ def main():
 
 
 if __name__ == '__main__':
-    print("hello")
     main()

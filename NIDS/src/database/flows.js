@@ -13,6 +13,7 @@ async function newFlow(flowData){
         ip_dst: flowData.ip_dst,
         port_dst: flowData.port_dst,
         label: flowData.label,
+        prob: flowData.prob,
         timestamp: flowData.timestamp,
         len_fwd: flowData.len_fwd,
         len_bwd: flowData.len_bwd

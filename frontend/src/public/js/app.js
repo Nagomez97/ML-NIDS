@@ -12,6 +12,10 @@ Vue.component('left_menu', {
           <a href="#" @click="$emit('changeview', 'chart-dashboard')" :class="{ 'open' : view == 'chart-dashboard' }"><i data-feather='bar-chart-2' width='50' height='50' stroke-width='4' class="left-menu-icon"></i></a>
       </div>
 
+      <div class="left-menu-item">
+          <a href="#" @click="$emit('changeview', 'options')" :class="{ 'open' : view == 'options' }"><i data-feather='crosshair' width='45' height='45' stroke-width='2' class="left-menu-icon"></i></a>
+      </div>
+
     </div>
   `
 })
@@ -79,6 +83,16 @@ Vue.component('table-dashboard', {
           $('#play-button').removeClass('glyphicon-play');
           $('#play-button').addClass('glyphicon-pause');
         }
+      },
+      setTarget: function(){
+        var ip = $('#modal-ip').text()
+        $.ajax({
+          type: "POST",
+          url: "http://localhost:8080/api/ddbb/ips/setTarget",
+          data: {ip: ip},
+          
+          dataType: 'json'
+        })
       }
     },
     mounted () {
@@ -95,8 +109,40 @@ Vue.component('table-dashboard', {
             {"data" : "label"}
         ],
         order: [[3, 'desc']],
-        pageLength: 100
+        pageLength: 100,
+        "rowCallback": function(row, data) {
+          if (data['label'].includes("Attack")){
+            $('td:eq(4)', row).addClass('red');
+          }
+          else{
+            $('td:eq(4)', row).addClass('green');
+          }
+        }
       });
+
+      $(document).on('click', '#flowTable tbody tr', async function() {
+
+        var ip = $(this)[0].cells[0].innerText;
+
+        var targeted = await axios.post(`http://localhost:8080/api/ddbb/ips/isTargeted`, {
+          ip: ip
+        })
+
+        targeted = targeted.data.targeted;
+
+        // If host is already targeted, cant add again
+        if(targeted){
+          $("#modal-content").text("Host already targeted.");
+          $("#modal-button").addClass("disabled-button");
+        }
+        else {
+          $("#modal-content").text("Send host to Targets?");
+          $("#modal-button").removeClass("disabled-button");
+        }
+
+        $("#modal-ip").text($(this)[0].cells[0].innerText);
+        $("#hostModal").modal("show");
+      })
 
       $('.dataTables_length').addClass('bs-select');
       var vm = this;
@@ -108,6 +154,28 @@ Vue.component('table-dashboard', {
     },
     template: `
         <div class="container">
+            <!-- Modal -->
+            <div id="hostModal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+            
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="modal-ip">Host Settings</h4>
+                  </div>
+                  <div class="modal-body">                    
+                    <p id="modal-content">Send host to Targets?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" id="modal-button" class="btn btn-default" data-dismiss="modal" @click="setTarget">Set Target</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+            
+              </div>
+            </div>
+
             <div class="table-outter">
               <table class="table" id="flowTable">
                 <thead class="thead-dark">
@@ -461,6 +529,108 @@ Vue.component('attacks-ip', {
     `
     })
 
+    // Table dashboard
+Vue.component('options', {
+  props: ['view'],
+  data: function (){
+    return {
+      targets: []
+    }
+  },
+  methods: {
+    remove: function(ip){
+      // Removes element from targets
+      this.targets = this.targets.map(x => {
+        if(x['ip'] == ip){
+          return null
+        }
+        else {
+          return x
+        }
+      }).filter(x => {
+        return x != null
+      })
+
+      axios.post(`http://localhost:8080/api/ddbb/ips/removeTarget`, {
+        ip: ip
+      })
+    }
+  },
+  async mounted() {
+    const targets = await axios.get(`http://localhost:8080/api/ddbb/ips/getTargets`);
+    if(targets){
+      this.targets = targets.data.targets.map(x => {
+        if(x['blocked'] == true){
+          x['blocked'] = 'Blocked';
+        }
+        else {
+          x['blocked'] = 'Online'
+        }
+        return x
+      });
+    }
+
+    $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+    
+  },
+  updated() {
+    feather.replace()
+  },
+  template: `
+      <div class="container">
+          <div class="options-ip-container dataTables_scroll">
+            <div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px none; width: 100%;">
+              <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 100%; padding-right: 16px;">
+                <table class="table dataTable no-footer" role="grid" style="margin-left: 0px;width: 100%">
+                  <thead class="thead-dark">
+                    <tr role="row">
+                      <th scope="col" tabindex="0" rowspan="1" colspan="1" style="width: 25%"> IP source </th>
+                      <th scope="col" tabindex="0" rowspan="1" colspan="1" style="width: 25%"> % attacks last hour </th>
+                      <th scope="col" tabindex="0" rowspan="1" colspan="1" style="width: 25%"> Status </th>
+                      <th scope="col" tabindex="0" rowspan="1" colspan="1" style="width: 25%"> Options </th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+            </div>
+
+            <div class="dataTables_scrollBody" style="position: relative; overflow: auto; max-height: 50vh; width: 100%;">
+              <table class="table dataTable no-footer" role="grid" style="width: 100%">
+                <thead class="thead-dark">
+                  <tr role="row" style="height: 0px;"> 
+                    <th class="col-width"> </th>
+                    <th class="col-width"> </th>
+                    <th class="col-width"> </th>
+                    <th class="col-width"> </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="target in targets" role="row" class="even">
+                    <td class="options-element"> {{target.ip}} </td>
+                    <td class="options-element green" v-if="target.stat <= 25"> {{target.stat}} </td>
+                    <td class="options-element orange" v-if="target.stat >= 25 && target.stat <= 75"> {{target.stat}} </td>
+                    <td class="options-element red" v-if="target.stat > 75"> {{target.stat}} </td>
+                    <td class="options-element green" v-if="target.blocked == 'Online'"><b> {{target.blocked}} </b></td>
+                    <td class="options-element red" v-else> <b>{{target.blocked}} </b></td>
+                    <td class="options-element options">
+                      <div class="options-options-container x">
+                        <a class="options-x" data-toggle="tooltip" data-placement="right" title="Remove target" href="#" @click="remove(target.ip);"><i data-feather='x' width='30' height='30' stroke-width='3' class="option-button-x"></i></a>
+                      </div>
+                      <div class="options-options-container block">
+                        <a class="options-shield" data-toggle="tooltip" data-placement="right" title="Block IP" v-if="target.blocked == 'Online'" href="#" @click="block(target.ip);"><i data-feather='shield' width='30' height='30' stroke-width='3' class="option-button-shield"></i></a>
+                        <a class="options-shield" data-toggle="tooltip" data-placement="right" title="Unblock IP" v-else href="#" @click="unblock(target.ip);"><i data-feather='shield-off' width='30' height='30' stroke-width='3' class="option-button-shieldoff"></i></a>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </div>
+  `
+});
 
 
 // App

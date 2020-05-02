@@ -13,7 +13,7 @@ function setRoutes(app) {
     app.get('/api/sniffer/isRunning', core.isRunning);
     app.get('/api/sniffer/getInterfaces', core.getInterfaces);
 
-    // Database
+    // Flows
     app.post('/api/ddbb/flows/destroyAll', core.destroyAllFlows);
     app.get('/api/ddbb/flows/getFromHour', core.getFromHour);
     app.get('/api/ddbb/flows/getCurrentHour', core.getCurrentHour);
@@ -21,6 +21,11 @@ function setRoutes(app) {
     app.get('/api/ddbb/flows/getIPTrafficData', core.getIPTrafficData);
     app.get('/api/ddbb/flows/getAttacksIPData', core.getAttacksIPData);
 
+    // Targets
+    app.post('/api/ddbb/ips/setTarget', core.setTarget);
+    app.post('/api/ddbb/ips/removeTarget', core.removeTarget);
+    app.get('/api/ddbb/ips/getTargets', core.getTargets);
+    app.post('/api/ddbb/ips/isTargeted', core.isTargeted);
 
 
     

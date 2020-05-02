@@ -3,6 +3,7 @@ const sniffer = require('../sniffer/sniffer');
 const networks = require('../utils/networks');
 const system = require('../utils/system');
 const Flows = require('../database/flows');
+const Targets = require('../database/targets');
 const Utils = require('../utils/hours');
 
 const _temp = `${__dirname}/../temp/`;
@@ -36,7 +37,7 @@ async function startSniffer(req, res){
         })
     }
 
-    logger.info(`CORE \t\t Starting sniffer on interface ${iface}...`);
+    logger.info(`CORE \t\t Starting sniffer on interface ${iface} each ${timeout} seconds...`);
 
     sniffer.sniff(iface, timeout);
     _running = true
@@ -446,6 +447,83 @@ async function getAttacksIPData(req, res){
 
 }
 
+/**
+ * Creates a target given an IP
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
+async function setTarget(req, res){
+    var ip = req.body.ip;
+    if(ip == null){
+        logger.error(`CORE \t\t Empty ip whet setting target`);
+        return res.status(400);
+    }
+
+    Targets.setIPTarget(ip);
+    logger.info(`CORE \t\t Target ${ip} added`)
+    return res.status(200).json({'response': 'ok'});
+}
+
+/**
+ * Removes a target given an IP
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
+async function removeTarget(req, res){
+    var ip = req.body.ip;
+    if(ip == null){
+        logger.error(`CORE \t\t Empty ip whet deleting target`);
+        return res.status(400);
+    }
+
+    Targets.removeIPTarget(ip);
+    return res.status(200).json({'response': 'ok'});
+}
+
+/**
+ * Returns targets
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
+async function getTargets(req, res){
+
+    var fromHour = Utils.getLastHour();
+
+    var targets = await Targets.attacksPerHour(fromHour);
+    logger.info(`CORE \t\t Targets required`)
+    return res.status(200).json({'targets': targets});
+}
+
+
+/**
+ * Returns true if a host is already targeted
+ *
+ * @param {*} req
+ * @param {*} res
+ */
+async function isTargeted(req, res){
+    var ip = req.body.ip;
+
+    if(ip == null){
+        logger.error(`CORE \t\t Empty ip when asking for target`);
+        return res.status(400);
+    }
+
+    var isTargeted = await Targets.isTargeted(ip);
+    if(isTargeted == true){
+        return res.status(200).json({'targeted': true})
+    }
+    else{
+        return res.status(200).json({'targeted': false})
+    }
+}
+
 
 
 module.exports = {
@@ -459,5 +537,9 @@ module.exports = {
     getInterfaces,
     getTimeTrafficData,
     getIPTrafficData,
-    getAttacksIPData
+    getAttacksIPData,
+    setTarget,
+    getTargets,
+    removeTarget,
+    isTargeted
 }
