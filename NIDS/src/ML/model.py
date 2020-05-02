@@ -76,7 +76,7 @@ class Model:
             self.df['Label'] = labeler(prediction)
             self.df['Prob'] =  prediction
         except Exception:
-            print("Error in prediction: " + Exception)
+            print("Error in prediction: Maybe empty pcap?")
             exit(4)
 
         return

@@ -524,6 +524,22 @@ async function isTargeted(req, res){
     }
 }
 
+async function getAttacksFromIP(req, res){
+    var attacker = req.body.ip;
+    if(attacker == null){
+        return res.status(500).json({
+            error: 'Empty IP'
+        })
+    }
+
+    var fromHour = Utils.getLastHour();
+    var result = await Targets.getAttacksFromIP(attacker, fromHour);
+
+    return res.status(200).json({
+        attacks: result
+    })
+}
+
 
 
 module.exports = {
@@ -541,5 +557,6 @@ module.exports = {
     setTarget,
     getTargets,
     removeTarget,
-    isTargeted
+    isTargeted,
+    getAttacksFromIP
 }
