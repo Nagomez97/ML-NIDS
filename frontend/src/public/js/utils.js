@@ -6,7 +6,7 @@ $(document).ready(function() {
 
 function checkRunning(){
     // Check if is running
-    $.get("http://localhost:8080/api/sniffer/isRunning", function(data){
+    $.get("https://localhost:8080/api/sniffer/isRunning", function(data){
         if(data.running){
             $('#dropdownMenuButton').addClass('stop').removeClass('start').removeClass('dropdown-toggle');
             $('#dropdownMenuButton').html('Stop')
@@ -27,7 +27,7 @@ function checkRunning(){
 function startSniffer(interface){
 
     $.ajax({
-        url: "http://localhost:8080/api/sniffer/start",
+        url: "https://localhost:8080/api/sniffer/start",
         type: "post",
         contentType: "application/x-www-form-urlencoded",
         data: "interface=" + interface + "&timeout=5",
@@ -39,7 +39,7 @@ function startSniffer(interface){
 
 function stopSniffer(){
     $.ajax({
-        url: "http://localhost:8080/api/sniffer/stop",
+        url: "https://localhost:8080/api/sniffer/stop",
         type: "post",
         contentType: "application/x-www-form-urlencoded",
         success: function(){
@@ -49,7 +49,7 @@ function stopSniffer(){
 }
 
 function fetchInterfaces(){
-    $.get("http://localhost:8080/api/sniffer/getInterfaces", function(data){
+    $.get("https://localhost:8080/api/sniffer/getInterfaces", function(data){
         data.interfaces.forEach(iface => {
             var _dropdown = $(".dropdown-menu");
             _dropdown.append("<a class='dropdown-item interface btn btn-secondary' role='button' onclick='startSniffer(this.innerText)'>" + iface + "</a>")

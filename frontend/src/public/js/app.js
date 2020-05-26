@@ -34,7 +34,7 @@ Vue.component('table-dashboard', {
     methods: {
       changeTable: function(hour){
         
-        var url = 'http://localhost:8080/api/ddbb/flows/getFromHour?hour=' + hour;
+        var url = 'https://localhost:8080/api/ddbb/flows/getFromHour?hour=' + hour;
 
         this.hour = hour;
 
@@ -88,7 +88,7 @@ Vue.component('table-dashboard', {
         var ip = $('#modal-ip').text()
         $.ajax({
           type: "POST",
-          url: "http://localhost:8080/api/ddbb/ips/setTarget",
+          url: "https://localhost:8080/api/ddbb/ips/setTarget",
           data: {ip: ip},
           
           dataType: 'json'
@@ -100,7 +100,7 @@ Vue.component('table-dashboard', {
       this.table = $('#flowTable').DataTable({
         "scrollY": "50vh",
         "scrollCollapse": true,
-        ajax: 'http://localhost:8080/api/ddbb/flows/getFromHour?hour=-1',
+        ajax: 'https://localhost:8080/api/ddbb/flows/getFromHour?hour=-1',
         columns: [
             {"data" : "ip_src"},
             {"data" : "ip_dst"},
@@ -124,7 +124,7 @@ Vue.component('table-dashboard', {
 
         var ip = $(this)[0].cells[0].innerText;
 
-        var targeted = await axios.post(`http://localhost:8080/api/ddbb/ips/isTargeted`, {
+        var targeted = await axios.post(`https://localhost:8080/api/ddbb/ips/isTargeted`, {
           ip: ip
         })
 
@@ -303,7 +303,7 @@ Vue.component('traffic-time', {
 
     var getData = function() {
       $.ajax({
-        url: 'http://localhost:8080/api/ddbb/flows/getChartTrafficTime',
+        url: 'https://localhost:8080/api/ddbb/flows/getChartTrafficTime',
         success: function(data) {
           var oldLabels = myChart.data.labels;
 
@@ -420,7 +420,7 @@ Vue.component('traffic-ip', {
 
     var getData = function() {
       $.ajax({
-        url: 'http://localhost:8080/api/ddbb/flows/getIPTrafficData',
+        url: 'https://localhost:8080/api/ddbb/flows/getIPTrafficData',
         success: function(data) {
 
           data = data.chartData;
@@ -497,7 +497,7 @@ Vue.component('attacks-ip', {
 
     var getData = function() {
       $.ajax({
-        url: 'http://localhost:8080/api/ddbb/flows/getAttacksIPData',
+        url: 'https://localhost:8080/api/ddbb/flows/getAttacksIPData',
         success: function(data) {
           // var oldLabels = myChart.data.labels;
           myChartAttack.data.labels = [];
@@ -551,13 +551,13 @@ Vue.component('options', {
         return x != null
       })
 
-      axios.post(`http://localhost:8080/api/ddbb/ips/removeTarget`, {
+      axios.post(`https://localhost:8080/api/ddbb/ips/removeTarget`, {
         ip: ip
       })
     }
   },
   async mounted() {
-    const targets = await axios.get(`http://localhost:8080/api/ddbb/ips/getTargets`);
+    const targets = await axios.get(`https://localhost:8080/api/ddbb/ips/getTargets`);
     if(targets){
       this.targets = targets.data.targets.map(x => {
         if(x['blocked'] == true){
