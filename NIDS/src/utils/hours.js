@@ -9,7 +9,7 @@ function getCurrentTime(){
     var month = (datetime.getMonth() + 1 > 9 ? datetime.getMonth() + 1 : '0' + (datetime.getMonth() + 1));
     var year = datetime.getFullYear();
     
-    var currentDate = `${day}/${month}/${year}`
+    var currentDate = `${year}/${month}/${day}`
 
     var currentTime = datetime.toTimeString().split(' ')[0];
     if(currentTime.length < 8){
@@ -29,7 +29,7 @@ function getCurrentDate(){
     var month = (datetime.getMonth() + 1 > 9 ? datetime.getMonth() + 1 : '0' + (datetime.getMonth() + 1));
     var year = datetime.getFullYear();
     
-    var currentDate = `${day}/${month}/${year}`
+    var currentDate = `${year}/${month}/${day}`
 
     return currentDate;
 }
@@ -44,7 +44,7 @@ function getYesterdayDate(){
     var month = (datetime.getMonth() + 1 > 9 ? datetime.getMonth() + 1 : '0' + (datetime.getMonth() + 1));
     var year = datetime.getFullYear();
     
-    var currentDate = `${day}/${month}/${year}`
+    var currentDate = `${year}/${month}/${day}`
 
     return currentDate;
 }
@@ -130,7 +130,7 @@ function getLastHour(){
     var month = (datetime.getMonth() + 1 > 9 ? datetime.getMonth() + 1 : '0' + (datetime.getMonth() + 1));
     var year = datetime.getFullYear();
     
-    var currentDate = `${day}/${month}/${year}`
+    var currentDate = `${year}/${month}/${day}`
 
     var currentTime = datetime.toTimeString().split(' ')[0];
     if(currentTime.length < 8){

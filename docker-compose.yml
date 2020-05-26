@@ -48,6 +48,7 @@ services:
         depends_on:
             - db
         volumes:
+        #  Comment the first one on deployment
         - ./NIDS/:/usr/src/
         - /etc/timezone:/etc/timezone:ro
         - "/etc/localtime:/etc/localtime:ro"
@@ -64,6 +65,7 @@ services:
         ports: 
             - 8000:8000
         volumes:
+        # Comment the first one on deployment
         - ./frontend/:/usr/src/
         - /etc/timezone:/etc/timezone:ro
         - "/etc/localtime:/etc/localtime:ro"

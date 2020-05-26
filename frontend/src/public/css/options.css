@@ -1,0 +1,78 @@
+.col-width {
+    width: 25%;
+}
+
+.options {
+    padding: 0px 10px!important;
+    overflow: hidden;
+    position: relative;
+    /* width: 75%; */
+}
+
+.options-options-container {
+    height: 100%;
+    width: 30%;
+    position: absolute;
+    top: 0;
+    display: flex;
+
+    align-content: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+}
+
+.x {
+    left: 0;
+}
+
+.block {
+    left: 80px;
+}
+
+.green {
+    color: rgba(0,240,20,0.8);
+}
+
+.red {
+    color: rgba(255,2,2,0.8);
+}
+
+.orange {
+    color: rgba(255, 115, 0, 0.8);
+}
+
+.options-options-container > a {
+    display: block;
+    width: 30px;
+    height: 30px;
+}
+
+.options-a:hover {
+    color: rgba(230,2,2,0.8);
+}
+
+.option-button-x {
+    color: rgba(230,2,2,1);
+}
+
+.option-button-shield {
+    color: rgba(0,136,169,0.8);
+}
+
+.option-button-shieldoff {
+    color: rgba(0, 160, 13, 1);
+}
+
+.options-x > svg:hover {
+    color: rgba(60,2,2,0.6);
+}
+
+.options-shield > svg:hover {
+    color: rgba(0,100,133,0.6);
+}
+
+.options-shieldoff > svg:hover {
+    color: rgba(0,200,0,0.6);
+}

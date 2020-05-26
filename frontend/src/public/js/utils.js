@@ -1,9 +1,7 @@
 // Code to launch when page is ready
 $(document).ready(function() {
-
     checkRunning();
     fetchInterfaces();
-
 })
 
 function checkRunning(){
@@ -17,6 +15,7 @@ function checkRunning(){
         }
         else{
             $('#dropdownMenuButton').addClass('start').addClass('dropdown-toggle').removeClass('stop');
+            $('#dropdownMenuButton').removeAttr("onclick", "stopSniffer();");
             $('#dropdownMenuButton').attr("aria-expanded", "false");
             $('#dropdown-div').removeClass('open');
             $('#dropdownMenuButton').html('Launch');
@@ -31,7 +30,7 @@ function startSniffer(interface){
         url: "http://localhost:8080/api/sniffer/start",
         type: "post",
         contentType: "application/x-www-form-urlencoded",
-        data: "interface=" + interface + "&timeout=10",
+        data: "interface=" + interface + "&timeout=5",
         success: function(){
             checkRunning();
         }
@@ -43,7 +42,6 @@ function stopSniffer(){
         url: "http://localhost:8080/api/sniffer/stop",
         type: "post",
         contentType: "application/x-www-form-urlencoded",
-        data: "interface=wlp3s0&timeout=10",
         success: function(){
             checkRunning();
         }
