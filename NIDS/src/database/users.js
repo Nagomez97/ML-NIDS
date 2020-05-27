@@ -1,5 +1,6 @@
 const Users = require('../models/index').Users;
 const crypto = require('crypto');
+const logger = require('../../config/log/logsConfig');
 
 /**
  * Creates user on ddbb with a hashed password

@@ -23,7 +23,7 @@ app.use(session({
         httpOnly: true, // Cant access through document.cookie
         secure: true, // Requires HTTPS connections only
         sameSite: true, // blocks CORS request on cookies
-        maxAge: 1000 // Time in ms
+        maxAge: 3600000 // Time in ms
     },
     resave: true,
     saveUninitialized: true
