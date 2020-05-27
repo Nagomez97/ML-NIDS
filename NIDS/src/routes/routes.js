@@ -27,6 +27,11 @@ function setRoutes(app) {
     app.get('/api/ddbb/ips/getTargets', core.getTargets);
     app.post('/api/ddbb/ips/isTargeted', core.isTargeted);
 
+    // Users
+    app.post('/api/users/newUser', core.newUser);
+    app.post('/api/users/emptyUsers', core.emptyUsers);
+    app.post('/api/users/checkLogin', core.checkLogin);
+
 
     
 }

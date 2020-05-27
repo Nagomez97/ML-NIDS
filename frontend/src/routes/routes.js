@@ -7,6 +7,7 @@ function setRoutes(app) {
     //route to get an audit by the id in the query params
     app.get('/', server.home);
     app.post('/login', server.login);
+    app.post('/newUser', server.createUser);
     
 }
 

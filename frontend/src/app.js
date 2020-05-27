@@ -5,24 +5,32 @@ const router = require('./routes/routes');
 const session = require('express-session');
 const fs = require('fs');
 const https = require('https');
+const path = require('path');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
 // seves static content
 app.use(express.static(__dirname + '/public'));
 
+// Cookies management
+app.use(cookieParser());
+
 app.use(session({
     secret: 'importantsecret',
-    name: 'token',
+    name: 'nids_session',
     cookie: {
         httpOnly: true, // Cant access through document.cookie
-        secure: false, // Requires HTTPS connections only
+        secure: true, // Requires HTTPS connections only
         sameSite: true, // blocks CORS request on cookies
-        maxAge: 100000 // Time in ms
+        maxAge: 1000 // Time in ms
     },
     resave: true,
     saveUninitialized: true
 }))
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '/views'))
 
 
 app.use(express.urlencoded({ extended: true }))

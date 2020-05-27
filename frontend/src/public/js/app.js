@@ -32,9 +32,26 @@ Vue.component('table-dashboard', {
       }
     },
     methods: {
+      getCookie: function(c_name){
+          var i,x,y,ARRcookies=document.cookie.split(";");
+      
+          for (i=0;i<ARRcookies.length;i++)
+          {
+              x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+              y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+              x=x.replace(/^\s+|\s+$/g,"");
+              if (x==c_name)
+              {
+                  return unescape(y);
+              }
+           }
+      },
       changeTable: function(hour){
+
+        var token = this.getCookie('token');
+        var username = this.getCookie('username');
         
-        var url = 'https://localhost:8080/api/ddbb/flows/getFromHour?hour=' + hour;
+        var url = 'https://localhost:8080/api/ddbb/flows/getFromHour?hour=' + hour + '&token=' + token + '&username='+username;
 
         this.hour = hour;
 
@@ -86,10 +103,13 @@ Vue.component('table-dashboard', {
       },
       setTarget: function(){
         var ip = $('#modal-ip').text()
+        var token = this.getCookie('token');
+        var username = this.getCookie('username');
+
         $.ajax({
           type: "POST",
           url: "https://localhost:8080/api/ddbb/ips/setTarget",
-          data: {ip: ip},
+          data: {ip: ip, username:username, token:token},
           
           dataType: 'json'
         })
@@ -97,10 +117,13 @@ Vue.component('table-dashboard', {
     },
     mounted () {
 
+      var token = this.getCookie('token');
+      var username = this.getCookie('username');
+
       this.table = $('#flowTable').DataTable({
         "scrollY": "50vh",
         "scrollCollapse": true,
-        ajax: 'https://localhost:8080/api/ddbb/flows/getFromHour?hour=-1',
+        ajax: 'https://localhost:8080/api/ddbb/flows/getFromHour?hour=-1&token='+token+'&username='+username,
         columns: [
             {"data" : "ip_src"},
             {"data" : "ip_dst"},
@@ -125,7 +148,9 @@ Vue.component('table-dashboard', {
         var ip = $(this)[0].cells[0].innerText;
 
         var targeted = await axios.post(`https://localhost:8080/api/ddbb/ips/isTargeted`, {
-          ip: ip
+          ip: ip,
+          username: username,
+          token: token
         })
 
         targeted = targeted.data.targeted;
