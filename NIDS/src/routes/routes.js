@@ -28,6 +28,12 @@ function setRoutes(app) {
     app.post('/api/ddbb/ips/isTargeted', core.isTargeted);
     app.post('/api/ddbb/ips/getAttacksFromIP', core.getAttacksFromIP);
 
+    // Users
+    app.post('/api/users/newUser', core.createUser);
+    app.post('/api/users/emptyUsers', core.emptyUsers);
+    app.post('/api/users/checkLogin', core.checkLogin);
+
+
     
 }
 

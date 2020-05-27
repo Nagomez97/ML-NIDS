@@ -32,9 +32,26 @@ Vue.component('table-dashboard', {
       }
     },
     methods: {
+      getCookie: function(c_name){
+          var i,x,y,ARRcookies=document.cookie.split(";");
+      
+          for (i=0;i<ARRcookies.length;i++)
+          {
+              x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+              y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+              x=x.replace(/^\s+|\s+$/g,"");
+              if (x==c_name)
+              {
+                  return unescape(y);
+              }
+           }
+      },
       changeTable: function(hour){
+
+        var token = this.getCookie('token');
+        var username = this.getCookie('username');
         
-        var url = 'http://localhost:8080/api/ddbb/flows/getFromHour?hour=' + hour;
+        var url = 'https://localhost:8080/api/ddbb/flows/getFromHour?hour=' + hour + '&token=' + token + '&username='+username;
 
         this.hour = hour;
 
@@ -86,10 +103,13 @@ Vue.component('table-dashboard', {
       },
       setTarget: function(){
         var ip = $('#modal-ip').text()
+        var token = this.getCookie('token');
+        var username = this.getCookie('username');
+
         $.ajax({
           type: "POST",
-          url: "http://localhost:8080/api/ddbb/ips/setTarget",
-          data: {ip: ip},
+          url: "https://localhost:8080/api/ddbb/ips/setTarget",
+          data: {ip: ip, username:username, token:token},
           
           dataType: 'json'
         })
@@ -97,10 +117,13 @@ Vue.component('table-dashboard', {
     },
     mounted () {
 
+      var token = this.getCookie('token');
+      var username = this.getCookie('username');
+
       this.table = $('#flowTable').DataTable({
         "scrollY": "50vh",
         "scrollCollapse": true,
-        ajax: 'http://localhost:8080/api/ddbb/flows/getFromHour?hour=-1',
+        ajax: 'https://localhost:8080/api/ddbb/flows/getFromHour?hour=-1&token='+token+'&username='+username,
         columns: [
             {"data" : "ip_src"},
             {"data" : "ip_dst"},
@@ -124,8 +147,10 @@ Vue.component('table-dashboard', {
 
         var ip = $(this)[0].cells[0].innerText;
 
-        var targeted = await axios.post(`http://localhost:8080/api/ddbb/ips/isTargeted`, {
-          ip: ip
+        var targeted = await axios.post(`https://localhost:8080/api/ddbb/ips/isTargeted`, {
+          ip: ip,
+          username: username,
+          token: token
         })
 
         targeted = targeted.data.targeted;
@@ -249,6 +274,22 @@ Vue.component('chart-dashboard', {
 // Traffic/Time chart
 Vue.component('traffic-time', {
   props: [],
+  methods: {
+    getCookie: function(c_name){
+      var i,x,y,ARRcookies=document.cookie.split(";");
+  
+      for (i=0;i<ARRcookies.length;i++)
+      {
+          x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+          y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+          x=x.replace(/^\s+|\s+$/g,"");
+          if (x==c_name)
+          {
+              return unescape(y);
+          }
+       }
+    }
+  },
   mounted() {
     var data = {
       labels: [],
@@ -302,8 +343,11 @@ Vue.component('traffic-time', {
     });
 
     var getData = function() {
+      var username = this.getCookie('username');
+      var token = this.getCookie('token');
+
       $.ajax({
-        url: 'http://localhost:8080/api/ddbb/flows/getChartTrafficTime',
+        url: 'https://localhost:8080/api/ddbb/flows/getChartTrafficTime?token='+token+'&username='+username,
         success: function(data) {
           var oldLabels = myChart.data.labels;
 
@@ -375,6 +419,22 @@ Vue.component('traffic-time', {
 // Traffic/IP chart
 Vue.component('traffic-ip', {
   props: [],
+  methods: {
+    getCookie: function(c_name){
+      var i,x,y,ARRcookies=document.cookie.split(";");
+  
+      for (i=0;i<ARRcookies.length;i++)
+      {
+          x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+          y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+          x=x.replace(/^\s+|\s+$/g,"");
+          if (x==c_name)
+          {
+              return unescape(y);
+          }
+       }
+    }
+  },
   mounted() {
     var data = {
       labels: [],
@@ -419,8 +479,10 @@ Vue.component('traffic-ip', {
     });
 
     var getData = function() {
+      var username = this.getCookie('username');
+      var token = this.getCookie('token');
       $.ajax({
-        url: 'http://localhost:8080/api/ddbb/flows/getIPTrafficData',
+        url: 'https://localhost:8080/api/ddbb/flows/getIPTrafficData?username='+username+'&token='+token,
         success: function(data) {
 
           data = data.chartData;
@@ -452,6 +514,22 @@ Vue.component('traffic-ip', {
 // Attacks/IP chart
 Vue.component('attacks-ip', {
   props: [],
+  methods: {
+    getCookie: function(c_name){
+      var i,x,y,ARRcookies=document.cookie.split(";");
+  
+      for (i=0;i<ARRcookies.length;i++)
+      {
+          x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+          y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+          x=x.replace(/^\s+|\s+$/g,"");
+          if (x==c_name)
+          {
+              return unescape(y);
+          }
+       }
+    }
+  },
   mounted() {
     var data = {
       labels: [],
@@ -496,8 +574,10 @@ Vue.component('attacks-ip', {
     });
 
     var getData = function() {
+      var username = this.getCookie('username');
+      var token = this.getCookie('token');
       $.ajax({
-        url: 'http://localhost:8080/api/ddbb/flows/getAttacksIPData',
+        url: 'https://localhost:8080/api/ddbb/flows/getAttacksIPData?username='+username+'&token='+token,
         success: function(data) {
           // var oldLabels = myChart.data.labels;
           myChartAttack.data.labels = [];
@@ -538,6 +618,20 @@ Vue.component('options', {
     }
   },
   methods: {
+    getCookie: function(c_name){
+      var i,x,y,ARRcookies=document.cookie.split(";");
+  
+      for (i=0;i<ARRcookies.length;i++)
+      {
+          x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+          y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+          x=x.replace(/^\s+|\s+$/g,"");
+          if (x==c_name)
+          {
+              return unescape(y);
+          }
+       }
+    },
     remove: function(ip){
       // Removes element from targets
       this.targets = this.targets.map(x => {
@@ -551,7 +645,10 @@ Vue.component('options', {
         return x != null
       })
 
-      axios.post(`http://localhost:8080/api/ddbb/ips/removeTarget`, {
+      var username = this.getCookie('username');
+      var token = this.getCookie('token');
+
+      axios.post(`https://localhost:8080/api/ddbb/ips/removeTarget?username=${username}&token=${token}`, {
         ip: ip
       })
     },
@@ -574,8 +671,12 @@ Vue.component('options', {
       return array;
     },
     showPiechart: async function(attacker){
-      var result = await axios.post(`http://localhost:8080/api/ddbb/ips/getAttacksFromIP`, {
-                  ip: attacker
+      var username = this.getCookie('username');
+      var token = this.getCookie('token');
+      var result = await axios.post(`https://localhost:8080/api/ddbb/ips/getAttacksFromIP`, {
+                  ip: attacker,
+                  username: username,
+                  token: token
                 })
       var attacks = result.data.attacks;
 
@@ -625,7 +726,9 @@ Vue.component('options', {
     }
   },
   async mounted() {
-    const targets = await axios.get(`http://localhost:8080/api/ddbb/ips/getTargets`);
+    var username = this.getCookie('username');
+    var token = this.getCookie('token');
+    const targets = await axios.get(`https://localhost:8080/api/ddbb/ips/getTargets?username=${username}&token=${token}`);
     if(targets){
       this.targets = targets.data.targets.map(x => {
         if(x['blocked'] == true){
@@ -681,9 +784,9 @@ Vue.component('options', {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="target in targets" role="row" class="even" @click="showPiechart(target.ip);">
-                    <td class="options-element"> {{target.ip}} </td>
-                    <td class="options-element" >
+                  <tr v-for="target in targets" role="row" class="even">
+                    <td class="options-element" @click="showPiechart(target.ip);"> {{target.ip}} </td>
+                    <td class="options-element" @click="showPiechart(target.ip);">
                       <span class="green" v-if="target.stat_from <= 25"> {{target.stat_from}} (src) </span> 
                       <span class="orange" v-if="target.stat_from >= 25 && target.stat_from <= 75"> {{target.stat_from}} (src) </span> 
                       <span class="red" v-if="target.stat_from > 75"> {{target.stat_from}} (src) </span> 
@@ -692,8 +795,8 @@ Vue.component('options', {
                       <span class="green" v-if="target.stat_to >= 25 && target.stat_to <= 75"> {{target.stat_to}} (dst) </span>
                       <span class="green" v-if="target.stat_to > 75"> {{target.stat_to}} (dst) </span>
                     </td>
-                    <td class="options-element green" v-if="target.blocked == 'Online'"><b> {{target.blocked}} </b></td>
-                    <td class="options-element red" v-else> <b>{{target.blocked}} </b></td>
+                    <td class="options-element green" v-if="target.blocked == 'Online'" @click="showPiechart(target.ip);"><b> {{target.blocked}} </b></td>
+                    <td class="options-element red" @click="showPiechart(target.ip);" v-else> <b>{{target.blocked}} </b></td>
                     <td class="options-element options">
                       <div class="options-options-container x">
                         <a class="options-x" data-toggle="tooltip" data-placement="right" title="Remove target" href="#" @click="remove(target.ip);"><i data-feather='x' width='30' height='30' stroke-width='3' class="option-button-x"></i></a>

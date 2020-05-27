@@ -5,11 +5,14 @@ const system = require('../utils/system');
 const Flows = require('../database/flows');
 const Targets = require('../database/targets');
 const Utils = require('../utils/hours');
+const Users = require('../database/users');
+const crypto = require('crypto');
 
 const _temp = `${__dirname}/../temp/`;
 
 var _running = false;
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 /**
  * Starts the sniffer loop and checks for valid input fields
@@ -21,6 +24,13 @@ var _running = false;
 async function startSniffer(req, res){
     var iface = req.body.interface;
     var timeout = req.body.timeout;
+    var username = req.body.username;
+    var token = req.body.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
     
     if(iface == null || timeout == null || ! (new RegExp('^\\d+$').test(timeout)) ){
         logger.error(`CORE \t\t Invalid fields`);
@@ -55,6 +65,15 @@ async function startSniffer(req, res){
  * @param {*} res
  */
 async function stopSniffer(req, res){
+    // Check token
+    var username = req.body.username;
+    var token = req.body.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
+
     logger.info(`CORE \t\t Stopping sniffer...`);
     try{
         sniffer.stop();
@@ -75,6 +94,15 @@ async function stopSniffer(req, res){
 }
 
 async function resetSniffer(req, res){
+    // Check token
+    var username = req.body.username;
+    var token = req.body.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
+
     logger.info(`CORE \t\t Sniffer reset: Clearing temp files`);
     var pcaps = `${_temp}pcap`;
     var csvs = `${_temp}csv`;
@@ -96,6 +124,15 @@ async function resetSniffer(req, res){
  * @returns
  */
 async function destroyAllFlows(req, res){
+    // Check token
+    var username = req.body.username;
+    var token = req.body.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
+    
     logger.info(`CORE \t\t Destroying flows on DDBB.`);
     Flows.destroyAll();
 
@@ -113,6 +150,15 @@ async function destroyAllFlows(req, res){
  * @returns
  */
 async function getFromHour(req, res){
+    // Check token
+    var username = req.query.username;
+    var token = req.query.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token. Null parameters'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
+    
     var hour = req.query.hour; // integer between 0-23
 
     if(hour == '-1' || hour == null || hour == 'Now'){
@@ -147,6 +193,15 @@ async function getFromHour(req, res){
  * @returns
  */
 async function getCurrentHour(req, res){ 
+    // Check token
+    var username = req.query.username;
+    var token = req.query.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
+    
     var fromHour = Utils.getLastHour();
 
     logger.debug(`CORE \t\t Requested flows from ${fromHour}`);
@@ -168,6 +223,8 @@ async function getCurrentHour(req, res){
  * @returns
  */
 async function isRunning(req, res){
+    // Check token
+    
     return res.status(200).json({
         'running': _running
     });
@@ -181,6 +238,15 @@ async function isRunning(req, res){
  * @returns
  */
 async function getInterfaces(req, res){
+    // Check token
+    var username = req.query.username;
+    var token = req.query.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
+    
     var ifaces = networks.getInterfaces();
 
     return res.status(200).json({
@@ -196,6 +262,15 @@ async function getInterfaces(req, res){
  * @returns
  */
 async function getTimeTrafficData(req, res){
+    // Check token
+    var username = req.query.username;
+    var token = req.query.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
+    
     var hour = req.query.hour; // integer between 0-23
     var flows = []
 
@@ -278,6 +353,15 @@ async function getTimeTrafficData(req, res){
  * @returns
  */
 async function getIPTrafficData(req, res){
+    // Check token
+    var username = req.query.username;
+    var token = req.query.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
+    
     var hour = req.query.hour; // integer between 0-23
     var flows = []
 
@@ -355,6 +439,15 @@ async function getIPTrafficData(req, res){
  * @returns
  */
 async function getAttacksIPData(req, res){
+    // Check token
+    var username = req.query.username;
+    var token = req.query.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
+    
     var hour = req.query.hour; // integer between 0-23
     var flows = []
 
@@ -455,6 +548,15 @@ async function getAttacksIPData(req, res){
  * @returns
  */
 async function setTarget(req, res){
+    // Check token
+    var username = req.body.username;
+    var token = req.body.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
+    
     var ip = req.body.ip;
     if(ip == null){
         logger.error(`CORE \t\t Empty ip whet setting target`);
@@ -474,6 +576,15 @@ async function setTarget(req, res){
  * @returns
  */
 async function removeTarget(req, res){
+    // Check token
+    var username = req.query.username;
+    var token = req.query.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
+    
     var ip = req.body.ip;
     if(ip == null){
         logger.error(`CORE \t\t Empty ip whet deleting target`);
@@ -492,6 +603,15 @@ async function removeTarget(req, res){
  * @returns
  */
 async function getTargets(req, res){
+    // Check token
+    var username = req.query.username;
+    var token = req.query.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
+    
 
     var fromHour = Utils.getLastHour();
 
@@ -508,6 +628,15 @@ async function getTargets(req, res){
  * @param {*} res
  */
 async function isTargeted(req, res){
+    // Check token
+    var username = req.body.username;
+    var token = req.body.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
+    
     var ip = req.body.ip;
 
     if(ip == null){
@@ -525,6 +654,13 @@ async function isTargeted(req, res){
 }
 
 async function getAttacksFromIP(req, res){
+    var username = req.body.username;
+    var token = req.body.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
     var attacker = req.body.ip;
     if(attacker == null){
         return res.status(500).json({
@@ -534,12 +670,68 @@ async function getAttacksFromIP(req, res){
 
     var fromHour = Utils.getLastHour();
     var result = await Targets.getAttacksFromIP(attacker, fromHour);
+    
 
     return res.status(200).json({
         attacks: result
     })
 }
 
+/**
+ * Creates user with hashed password on database
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
+async function createUser(req, res){
+    var username = req.body.username;
+    var password = req.body.password;
+
+    if(username == null || password == null){
+        logger.error(`CORE \t\t New user: empty data.`)
+        return res.status(400).json({});
+    }
+
+    await Users.createUser(username, password);
+
+    return res.status(200).json({'ok': true});
+}
+
+/**
+ * Checks password hash and username
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
+async function emptyUsers(req, res){
+    var empty = await Users.emptyUsers();
+    logger.debug(`CORE \t\t Empty users table: ${empty}`)
+    return res.status(200).json({empty: empty});
+}
+
+/**
+ * Checks if credentials are correct ande returns a session token
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
+async function checkLogin(req, res){
+    var username = req.body.username;
+    var password = req.body.password;
+
+    if(username == null || password == null){
+        logger.error(`CORE \t\t Check login: empty data.`)
+        return res.status(400).json({token: null});
+    }
+
+    var token = await Users.checkLogin(username, password);
+
+    return res.status(200).json({token: token});
+
+}
 
 
 module.exports = {
@@ -558,5 +750,9 @@ module.exports = {
     getTargets,
     removeTarget,
     isTargeted,
-    getAttacksFromIP
+    getAttacksFromIP,
+    isTargeted,
+    emptyUsers,
+    checkLogin,
+    createUser
 }

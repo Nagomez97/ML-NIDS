@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <title>Vision Login</title>
+        <link rel="stylesheet" type="text/css" href="/css/login_styles.css">
+        <!-- Feather icons -->
+        <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+        <script src="/js/login.js"></script>
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <div id="left-side">
+            <div id="header-div">
+                <img src="/images/vision_100px.png" alt="logo" width="100px">
+                <h4>Welcome to <span>VISION</span></h4>
+                <h3> <%= message %> </h3>
+            </div>
+            <div id="form-div">
+                <form action="/<%= action %>" method="post">
+                    <div class="floating-label">
+                        <div class="icon-div">
+                            <i data-feather="user" stroke-width='2'></i>
+                        </div>
+                        <input type="text" placeholder="Username" name="username" id="username" autocomplete="off" oninput="checkForm();">
+                    </div>
+
+                    <div class="floating-label">
+                        <div class="icon-div">
+                            <i data-feather="lock" stroke-width='2'></i>
+                        </div>
+                        <input type="password" placeholder="Password" name="passwd" id="passwd" autocomplete="off" oninput="checkForm();">
+                    </div>
+
+                    <input type="button" value="<%= button %>" class="button empty" id="submit-button">
+                    
+                </form>
+            </div>
+            <div id="empty-div"></div>
+        </div>
+        <div id="right-side" style="background-image: url(<%= url %>);">
+
+        </div>
+    </body>
+    <script>
+        feather.replace();
+    </script>
+</html>
