@@ -8,13 +8,11 @@ RUN apt-get install -y tshark
 #java
 
 # Install OpenJDK-8
-RUN apt-get update
 RUN apt-get install -y openjdk-8-jdk
 RUN apt-get install -y ant
 RUN apt-get clean
 
 # Fix certificate issues
-RUN apt-get update
 RUN apt-get install ca-certificates-java
 RUN apt-get clean
 RUN update-ca-certificates -f

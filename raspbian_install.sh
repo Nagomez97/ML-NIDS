@@ -12,16 +12,4 @@ sudo apt install -y python3-pip
 
 sudo pip3 install docker-compose
 
-docker-compose --version
-
-echo -e "Docker installation finished!"
-
-sudo apt install -y git
-
-git clone https://github.com/Nagomez97/ML-NIDS.git
-
-cd ML-NIDS
-
-docker-compose build
-
-echo -e "Installation finished! Run \n\tdocker-compose run\nto deploy Vision."
+echo -e "Installation finished! Run build&run.sh to deploy Vision!"
