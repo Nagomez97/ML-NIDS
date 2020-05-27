@@ -8,6 +8,7 @@ RUN apt-get install -y tshark
 #java
 
 # Install OpenJDK-8
+RUN dpkg --configure
 RUN apt-get install -y openjdk-8-jdk
 RUN apt-get install -y ant
 RUN apt-get clean
