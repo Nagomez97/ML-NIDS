@@ -529,7 +529,7 @@ Vue.component('attacks-ip', {
     `
     })
 
-    // Table dashboard
+    // Options dashboard
 Vue.component('options', {
   props: ['view'],
   data: function (){
@@ -554,6 +554,74 @@ Vue.component('options', {
       axios.post(`http://localhost:8080/api/ddbb/ips/removeTarget`, {
         ip: ip
       })
+    },
+    shuffle: function (array){
+      var currentIndex = array.length, temporaryValue, randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+
+      return array;
+    },
+    showPiechart: async function(attacker){
+      var result = await axios.post(`http://localhost:8080/api/ddbb/ips/getAttacksFromIP`, {
+                  ip: attacker
+                })
+      var attacks = result.data.attacks;
+
+      var labels = []
+      var d = []
+      attacks.map(x => {labels.push(x.ip_dst);d.push(x.attacks)})
+
+      var colors = this.shuffle(["#0074D9", "#FF4136", "#2ECC40", "#FF851B", "#7FDBFF", "#B10DC9", "#FFDC00", "#001f3f", "#39CCCC", "#01FF70", "#85144b", "#F012BE", "#3D9970", "#111111", "#AAAAAA"])
+
+      var data = {
+        labels: labels,
+        datasets: [{
+          label: `Attacks sent by ${attacker}`,
+          data: d,
+          backgroundColor: colors
+        }]
+      }
+
+      var ctx = document.getElementById('piechart_canvas').getContext('2d');
+      var myChartAttack = new Chart(ctx, {
+        type: 'doughnut',
+        data: data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          legend: {
+            position: 'right',
+            labels: {
+              fontColor: 'white',
+              fontSize: 15,
+            }
+            
+          }
+        }
+      })
+
+      myChartAttack.update();
+
+      $("#piechart_overlay").removeClass("hidden");
+      $("#piechart_container").removeClass("hidden");
+      $("#piechart_overlay").addClass("block");
+      $("#piechart_container").addClass("block");
+    },
+    hidePiechart: function(){
+      $("#piechart_overlay").addClass("hidden");
+      $("#piechart_container").addClass("hidden");
     }
   },
   async mounted() {
@@ -580,6 +648,12 @@ Vue.component('options', {
   },
   template: `
       <div class="container">
+        <div id="piechart_overlay" class="overlay hidden" @click="hidePiechart();">
+          <div id="piechart_container" class="hidden">
+            <canvas id="piechart_canvas" width="250px" height="250px"></canvas>
+          </div>
+        </div>
+
           <div class="options-ip-container dataTables_scroll">
             <div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px none; width: 100%;">
               <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 100%; padding-right: 16px;">
@@ -600,18 +674,24 @@ Vue.component('options', {
               <table class="table dataTable no-footer" role="grid" style="width: 100%">
                 <thead class="thead-dark">
                   <tr role="row" style="height: 0px;"> 
-                    <th class="col-width"> </th>
-                    <th class="col-width"> </th>
-                    <th class="col-width"> </th>
-                    <th class="col-width"> </th>
+                    <th class="col-width" style="padding: 0"> </th>
+                    <th class="col-width" style="padding: 0"> </th>
+                    <th class="col-width" style="padding: 0"> </th>
+                    <th class="col-width" style="padding: 0"> </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="target in targets" role="row" class="even">
+                  <tr v-for="target in targets" role="row" class="even" @click="showPiechart(target.ip);">
                     <td class="options-element"> {{target.ip}} </td>
-                    <td class="options-element green" v-if="target.stat <= 25"> {{target.stat}} </td>
-                    <td class="options-element orange" v-if="target.stat >= 25 && target.stat <= 75"> {{target.stat}} </td>
-                    <td class="options-element red" v-if="target.stat > 75"> {{target.stat}} </td>
+                    <td class="options-element" >
+                      <span class="green" v-if="target.stat_from <= 25"> {{target.stat_from}} (src) </span> 
+                      <span class="orange" v-if="target.stat_from >= 25 && target.stat_from <= 75"> {{target.stat_from}} (src) </span> 
+                      <span class="red" v-if="target.stat_from > 75"> {{target.stat_from}} (src) </span> 
+                      /
+                      <span class="green" v-if="target.stat_to <= 25"> {{target.stat_to}} (dst) </span>
+                      <span class="green" v-if="target.stat_to >= 25 && target.stat_to <= 75"> {{target.stat_to}} (dst) </span>
+                      <span class="green" v-if="target.stat_to > 75"> {{target.stat_to}} (dst) </span>
+                    </td>
                     <td class="options-element green" v-if="target.blocked == 'Online'"><b> {{target.blocked}} </b></td>
                     <td class="options-element red" v-else> <b>{{target.blocked}} </b></td>
                     <td class="options-element options">
