@@ -111,6 +111,30 @@ async function login(req, res){
 }
 
 /**
+ * Clears session and cookies
+ *
+ * @param {*} req
+ * @param {*} res
+ */
+async function logout(req, res){
+    if (req.session) {
+        // delete cookies
+        res.clearCookie("token");
+        res.clearCookie("username");
+
+        // delete session object
+        req.session.destroy(function(err) {
+          if(err) {
+            return next(err);
+          } else {
+            return res.redirect('/');
+          }
+        });
+      }
+    
+}
+
+/**
  * Sends credentials to NIDS microservice to create a new user
  *
  * @param {*} req
@@ -139,5 +163,6 @@ async function createUser(req, res){
 module.exports = {
     home,
     login,
+    logout,
     createUser
 }
