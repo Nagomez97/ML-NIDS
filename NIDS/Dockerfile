@@ -36,7 +36,7 @@ RUN apt-get -y install nodejs
 # Python and ML libraries
 RUN apt-get install -y python3-pip
 RUN pip3 install pandas
-RUN pip3 install sklearn
+RUN pip3 install scikit-learn==0.22.2.post1
 
 WORKDIR /usr/src
 
