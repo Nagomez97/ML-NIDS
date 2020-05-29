@@ -1,4 +1,6 @@
-FROM ubuntu:latest
+FROM ubuntu:bionic
+
+RUN java -version
 
 RUN apt-get update --fix-missing 
 
@@ -7,7 +9,7 @@ RUN apt-get install -y tshark
 
 #java
 
-# Install OpenJDK-8
+# Install OpenJDK-8 for Flowmeter
 RUN dpkg --configure
 RUN apt-get install -y openjdk-8-jdk
 RUN apt-get install -y ant
