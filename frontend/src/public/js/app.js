@@ -113,6 +113,19 @@ Vue.component('table-dashboard', {
           
           dataType: 'json'
         })
+      },
+      setDestTarget: function(){
+        var ip = $('#modal-dest-ip').text()
+        var token = this.getCookie('token');
+        var username = this.getCookie('username');
+
+        $.ajax({
+          type: "POST",
+          url: "https://localhost:8080/api/ddbb/ips/setTarget",
+          data: {ip: ip, username:username, token:token},
+          
+          dataType: 'json'
+        })
       }
     },
     mounted () {
@@ -146,6 +159,7 @@ Vue.component('table-dashboard', {
       $(document).on('click', '#flowTable tbody tr', async function() {
 
         var ip = $(this)[0].cells[0].innerText;
+        var dest_ip = $(this)[0].cells[1].innerText;
 
         var targeted = await axios.post(`https://localhost:8080/api/ddbb/ips/isTargeted`, {
           ip: ip,
@@ -153,7 +167,14 @@ Vue.component('table-dashboard', {
           token: token
         })
 
+        var dest_targeted = await axios.post(`https://localhost:8080/api/ddbb/ips/isTargeted`, {
+          ip: dest_ip,
+          username: username,
+          token: token
+        })
+
         targeted = targeted.data.targeted;
+        dest_targeted = dest_targeted.data.targeted;
 
         // If host is already targeted, cant add again
         if(targeted){
@@ -165,7 +186,18 @@ Vue.component('table-dashboard', {
           $("#modal-button").removeClass("disabled-button");
         }
 
+        // If dest host is already targeted, cant add again
+        if(dest_targeted){
+          $("#modal-dest-content").text("Destination host already targeted.");
+          $("#modal-dest-button").addClass("disabled-button");
+        }
+        else {
+          $("#modal-dest-content").text("Send host to Targets?");
+          $("#modal-dest-button").removeClass("disabled-button");
+        }
+
         $("#modal-ip").text($(this)[0].cells[0].innerText);
+        $("#modal-dest-ip").text($(this)[0].cells[1].innerText);
         $("#hostModal").modal("show");
       })
 
@@ -185,6 +217,8 @@ Vue.component('table-dashboard', {
             
                 <!-- Modal content-->
                 <div class="modal-content">
+
+                 <!-- Source host-->
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title" id="modal-ip">Host Settings</h4>
@@ -194,6 +228,18 @@ Vue.component('table-dashboard', {
                   </div>
                   <div class="modal-footer">
                     <button type="button" id="modal-button" class="btn btn-default" data-dismiss="modal" @click="setTarget">Set Target</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  </div>
+                  
+                  <!-- Destination host-->
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="modal-dest-ip">Dest host Settings</h4>
+                  </div>
+                  <div class="modal-body">                    
+                    <p id="modal-dest-content">Send destination host to Targets?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" id="modal-dest-button" class="btn btn-default" data-dismiss="modal" @click="setDestTarget">Set Target</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                   </div>
                 </div>
