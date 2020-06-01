@@ -88,6 +88,11 @@ async function removeIPTarget(ip){
     }
 
     var found = await getTarget(ip);
+
+    // If blocked, cannot remove
+    if(found.dataValues.blocked == true){
+        return -1;
+    }
     // If does exist, removes it
     if(found == null || found == undefined){
         return;
@@ -314,6 +319,159 @@ async function isTargeted(ip){
     return target != null;
 }
 
+function checkIP(ip){
+    var rx=/^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/;
+    return rx.test(ip);
+}
+
+/**
+ * Sets target blocked status to true or false
+ *
+ * @param {*} blocked
+ * @param {*} IP
+ */
+async function setTargetBlock(blocked, IP){
+    await Targets.update({blocked: blocked}, {
+        where: {ip: IP}
+    }).catch(err => {
+        logger.error(`TARGETS \t Cannot toggle target blocked status.`);
+    })
+}
+
+
+// Import ssh credentials
+var {credentials} = require('../../config/ssh-credentials');
+
+/**
+ * Sends SSH block query. Checks response. Blocks target on DDBB.
+ * Return: 
+ *          -2  -> Invalid IP
+ *          -1  -> Cannot connect
+ *          -3  -> Unknown Error
+ *           0  -> Ok
+ *
+ * @param {*} ip
+ */
+async function blockTarget(ip){
+    // Check IP to avoid injections
+    var result = checkIP(ip);
+    if(!result){
+        return -2;
+    }
+    var iptables_command = `sudo iptables -A INPUT -s ${ip} -j DROP`;
+    var iptables_command_check = `sudo iptables -C INPUT -s ${ip} -j DROP`;
+
+    var path, NodeSSH, ssh, fs
+ 
+    fs = require('fs')
+    path = require('path')
+    NodeSSH = require('node-ssh')
+    ssh = new NodeSSH()
+    var flag = 0;
+    
+    var promise = await ssh.connect({
+    host: '127.0.0.1',
+    username: credentials.ssh_username,
+    password: credentials.ssh_password
+    }).then(async function() {
+        await ssh.execCommand(iptables_command_check, { options: { pty: true }} ).then(function(result) {
+            // Check query. If no errors, target is already blocked
+            if(String(result.stderr).includes('does a matching rule exist in that chain?') == false){
+                flag = -4;
+            }
+          })
+        if(flag == -4) return;
+
+
+        await ssh.execCommand(iptables_command, { options: { pty: true }} ).then(function(result) {
+            // If no errors, change DDBB to BLOCKED
+            if(result.stdout.length == 0 && result.stderr.length == 0){
+                logger.info(`SSH \t\t IP ${ip} blocked!`);
+                setTargetBlock(true, ip);
+            }
+            else{
+                logger.error(`SSH \t\t Error running SSH command: ${result.stderr}`);
+                flag = -3;
+            }
+          })
+    }).catch(error => {
+        if(String(error).includes('All configured authentication methods failed')){
+            flag = -1;
+        }
+        else{
+            flag = -3;
+        }
+        logger.error(`SSH \t\t ${error}`)
+    })
+
+    return flag;
+
+
+}
+
+/**
+ * Sends SSH unblock query. Checks response. Unblocks target on DDBB.
+ * Return: 
+ *          -2  -> Invalid IP
+ *          -1  -> Cannot connect
+ *          -3  -> Unknown Error
+ *           0  -> Ok
+ *
+ * @param {*} ip
+ */
+async function unblockTarget(ip){
+    // Check IP to avoid injections
+    var result = checkIP(ip);
+    if(!result){
+        return -2;
+    }
+    var iptables_command = `sudo iptables -D INPUT -s ${ip} -j DROP`;
+
+    var path, NodeSSH, ssh, fs
+ 
+    fs = require('fs')
+    path = require('path')
+    NodeSSH = require('node-ssh')
+    ssh = new NodeSSH()
+
+    var flag = 0;
+    
+    var promise = await ssh.connect({
+    host: '127.0.0.1',
+    username: credentials.ssh_username,
+    password: credentials.ssh_password
+    }).then(async function() {
+        await ssh.execCommand(iptables_command, { options: { pty: true }} ).then(function(result) {
+            // If no errors, change DDBB to BLOCKED
+            if(result.stdout.length == 0 && result.stderr.length == 0){
+                logger.info(`SSH \t\t IP ${ip} unblocked!`);
+                setTargetBlock(false, ip);
+            }
+            else if(String(result.stderr).includes('does a matching rule exist in that chain?')){
+                logger.info(`SSH \t\t IP ${ip} unblocked!`);
+                setTargetBlock(false, ip);
+                flag = 0;
+            }
+            else{
+                logger.error(`SSH \t\t Error running SSH command: ${result.stderr}`);
+                flag = -3;
+            }
+          })
+    }).catch(error => {
+        if(String(error).includes('All configured authentication methods failed')){
+            flag = -1;
+        }
+        else{
+            flag = -3;
+        }
+        logger.error(`SSH \t\t ${error}`)
+    })
+
+    return flag;
+
+
+}
+
 module.exports ={
     getTarget,
     getTargets,
@@ -321,5 +479,7 @@ module.exports ={
     removeIPTarget,
     attacksPerHour,
     isTargeted,
-    getAttacksFromIP
+    getAttacksFromIP,
+    blockTarget,
+    unblockTarget
 }

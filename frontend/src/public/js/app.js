@@ -660,10 +660,14 @@ Vue.component('options', {
   props: ['view'],
   data: function (){
     return {
-      targets: []
+      targets: [],
+      key: 0
     }
   },
   methods: {
+    forceRerender: function(){
+      this.key += 1;
+    },
     getCookie: function(c_name){
       var i,x,y,ARRcookies=document.cookie.split(";");
   
@@ -678,7 +682,23 @@ Vue.component('options', {
           }
        }
     },
-    remove: function(ip){
+    remove: async function(ip){
+
+      
+
+      var username = this.getCookie('username');
+      var token = this.getCookie('token');
+
+      var result = await axios.post(`https://localhost:8080/api/ddbb/ips/removeTarget?username=${username}&token=${token}`, {
+        ip: ip
+      }).catch((error) => {
+        alert('Cannot remove. Target is blocked!');
+      })
+
+      if(result == null){
+        return;
+      }
+
       // Removes element from targets
       this.targets = this.targets.map(x => {
         if(x['ip'] == ip){
@@ -689,13 +709,6 @@ Vue.component('options', {
         }
       }).filter(x => {
         return x != null
-      })
-
-      var username = this.getCookie('username');
-      var token = this.getCookie('token');
-
-      axios.post(`https://localhost:8080/api/ddbb/ips/removeTarget?username=${username}&token=${token}`, {
-        ip: ip
       })
     },
     shuffle: function (array){
@@ -769,7 +782,70 @@ Vue.component('options', {
     hidePiechart: function(){
       $("#piechart_overlay").addClass("hidden");
       $("#piechart_container").addClass("hidden");
-    }
+    },
+    block: async function(target){
+      var ip = target.ip;
+      var username = this.getCookie('username');
+      var token = this.getCookie('token');
+      var result = await axios.post(`https://localhost:8080/api/ddbb/ips/block`, {
+                    ip: ip,
+                    username: username,
+                    token: token
+                  })
+
+      if(result == null){
+        alert('Unknwon server error running block query!');
+      }
+
+      
+                 
+      if(result.data != null){
+        var status = result.data.status
+        if(status == 0){
+          alert('IP ' + ip + ' was successfully blocked!');
+          
+        }
+        else if(status == -1){
+          alert('Cannot connect to host SSH server. Please, check credentials!')
+        }
+        else if(status == -4){
+          alert('Target already blocked. Please, reload page.')
+        }
+        else{
+          alert('Unknwon server error running block query!')
+        }
+      }
+    },
+    unblock: async function(target){
+      var ip = target.ip;
+      var username = this.getCookie('username');
+      var token = this.getCookie('token');
+      var result = await axios.post(`https://localhost:8080/api/ddbb/ips/unblock`, {
+                    ip: ip,
+                    username: username,
+                    token: token
+                  })
+
+      if(result == null){
+        alert('Unknwon server error running unblock query!');
+      }
+                 
+      if(result.data != null){
+        var status = result.data.status
+        if(status == 0){
+          alert('IP ' + ip + ' was successfully unblocked!');
+        }
+        else if(status == -1){
+          alert('Cannot connect to host SSH server. Please, check credentials!')
+        }
+        else if(status == -4){
+          alert('Target already blocked. Please, reload page.')
+        }
+        else{
+          alert('Unknwon server error running unblock query!')
+        }
+      }
+    },
   },
   async mounted() {
     var username = this.getCookie('username');
@@ -848,8 +924,8 @@ Vue.component('options', {
                         <a class="options-x" data-toggle="tooltip" data-placement="right" title="Remove target" href="#" @click="remove(target.ip);"><i data-feather='x' width='30' height='30' stroke-width='3' class="option-button-x"></i></a>
                       </div>
                       <div class="options-options-container block">
-                        <a class="options-shield" data-toggle="tooltip" data-placement="right" title="Block IP" v-if="target.blocked == 'Online'" href="#" @click="block(target.ip);"><i data-feather='shield' width='30' height='30' stroke-width='3' class="option-button-shield"></i></a>
-                        <a class="options-shield" data-toggle="tooltip" data-placement="right" title="Unblock IP" v-else href="#" @click="unblock(target.ip);"><i data-feather='shield-off' width='30' height='30' stroke-width='3' class="option-button-shieldoff"></i></a>
+                        <a id="block-icon" class="options-shield" data-toggle="tooltip" data-placement="right" title="Block IP" v-if="target.blocked == 'Online'" href="#" @click="block(target);"><i data-feather='shield' width='30' height='30' stroke-width='3' class="option-button-shield"></i></a>
+                        <a id="block-icon" class="options-shield" data-toggle="tooltip" data-placement="right" title="Unblock IP" v-else href="#" @click="unblock(target);"><i data-feather='shield-off' width='30' height='30' stroke-width='3' class="option-button-shieldoff"></i></a>
                       </div>
                     </td>
                   </tr>

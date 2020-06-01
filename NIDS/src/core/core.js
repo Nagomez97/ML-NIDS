@@ -591,7 +591,10 @@ async function removeTarget(req, res){
         return res.status(400);
     }
 
-    Targets.removeIPTarget(ip);
+    var status = await Targets.removeIPTarget(ip);
+    if(status == -1){
+        return res.status(400).json({message: 'Cannot remove target. Target is blocked!'})
+    }
     return res.status(200).json({'response': 'ok'});
 }
 
@@ -733,6 +736,75 @@ async function checkLogin(req, res){
 
 }
 
+/**
+ * Blocks a given IP
+ * Status:
+ *           0  ->  OK
+ *          -1  ->  Cannot connect
+ *          -2  ->  Invalid IP
+ *          -3  ->  Unknown error
+ *          -4  ->  Already blocked
+ *
+ * @param {*} req
+ * @param {*} res
+ */
+async function block(req, res){
+    var username = req.body.username;
+    var token = req.body.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
+
+    
+    var ip = req.body.ip;
+    if(ip == null){
+        logger.error(`CORE \t\t Cannot block. Empty IP.`);
+        return res.status(400).json({});
+    }
+
+    var target = await Targets.getTarget(ip);
+    blocked = target.dataValues.blocked;
+    if(blocked == true){
+        return res.status(200).json({status: -4})
+    }
+
+
+    var status = await Targets.blockTarget(ip);
+
+
+    return res.status(200).json({status: status});
+
+}
+
+
+/**
+ * Unblocks a given IP
+ *
+ * @param {*} req
+ * @param {*} res
+ */
+async function unblock(req, res){
+    var username = req.body.username;
+    var token = req.body.token;
+
+    if(username == null || token == null) return res.status(401).json({message: 'Invalid token.'});
+
+    var result = await Users.checkToken(username, token);
+    if(result == false) return res.status(401).json({message: 'Invalid token.'});
+
+    var ip = req.body.ip;
+    if(ip == null){
+        logger.error(`CORE \t\t Cannot unblock. Empty IP.`);
+        return res.status(400).json({});
+    }
+
+    var status = await Targets.unblockTarget(ip);
+
+    return res.status(200).json({status: status});
+
+}
 
 module.exports = {
     startSniffer,
@@ -754,5 +826,7 @@ module.exports = {
     isTargeted,
     emptyUsers,
     checkLogin,
-    createUser
+    createUser,
+    block,
+    unblock
 }
