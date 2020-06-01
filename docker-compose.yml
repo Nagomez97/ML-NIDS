@@ -7,29 +7,49 @@ version: '3.7'
 
 services:
     db:
-        image: mysql:8
-        container_name: db
-        command: --default-authentication-plugin=mysql_native_password
-        restart: always
-        env_file: 
-        # Use process.env in node.js code, like this 'process.env.ENV'.
-        - ./docker_config/dev/mysql.dev.env
-        environment: 
-            - DB_USERNAME=nacho
-            - DB_PASSWORD=nacho
-        ports:
-        # <Port exposed> : < MySQL Port running inside container>
-            - '3306:3306'
-        expose:
-        # Opens port 3306 on the container
-            - '3306'
-        # Where our data will be persisted
+        container_name: pg_db_rpi
+        build: 
+            context: .
+            dockerfile: ./DDBB/Dockerfile
+        env_file: ./docker_config/dev/mysql.dev.env
+        environment:
+        - POSTGRES_USER=nacho
+        - POSTGRES_PASSWORD=nacho
+        - DB_USERNAME=nacho
+        - DB_PASSWORD=nacho
+        - POSTGRES_DB=db
         volumes:
-        # Crea el volumen (my-db) en el host que almacena de forma persistente el contenido del directorio '/var/lib/mysql' ubicado en el contendor.
-            - my-db:/var/lib/mysql
-            - ./docker_config/db-init:/docker-entrypoint-initdb.d  
-            - /etc/timezone:/etc/timezone:ro
-            - "/etc/localtime:/etc/localtime:ro"
+        - ./my-db:/var/lib/postgresql
+        - /etc/timezone:/etc/timezone:ro
+        - "/etc/localtime:/etc/localtime:ro"
+        ports:
+        - "3306:3306"
+        restart: always
+
+
+        # image: mysql:8
+        # container_name: db
+        # command: --default-authentication-plugin=mysql_native_password
+        # restart: always
+        # env_file: 
+        # # Use process.env in node.js code, like this 'process.env.ENV'.
+        # - ./docker_config/dev/mysql.dev.env
+        # environment: 
+        #     - DB_USERNAME=nacho
+        #     - DB_PASSWORD=nacho
+        # ports:
+        # # <Port exposed> : < MySQL Port running inside container>
+        #     - '3306:3306'
+        # expose:
+        # # Opens port 3306 on the container
+        #     - '3306'
+        # # Where our data will be persisted
+        # volumes:
+        # # Crea el volumen (my-db) en el host que almacena de forma persistente el contenido del directorio '/var/lib/mysql' ubicado en el contendor.
+        #     - my-db:/var/lib/mysql
+        #     - ./docker_config/db-init:/docker-entrypoint-initdb.d  
+        #     - /etc/timezone:/etc/timezone:ro
+        #     - "/etc/localtime:/etc/localtime:ro"
         
     nids:
         image: nids

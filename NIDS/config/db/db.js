@@ -27,7 +27,7 @@ module.exports = {
         password: 'nacho',
         database: 'NIDS',
         host: 'localhost',
-        dialect: 'mysql',
+        dialect: 'postgres',
         logging: false,
     }
 };
