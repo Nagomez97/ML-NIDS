@@ -38,6 +38,15 @@ RUN apt-get install -y python3-pip
 RUN pip3 install pandas
 RUN pip3 install scikit-learn==0.22.2.post1
 
+# Raspberry
+# RUN apt-get install -y python3-pip
+# RUN pip3 install cython
+# RUN pip3 install numpy
+# RUN pip3 install pandas
+# RUN python3 -m pip install --upgrade pip
+# RUN apt-get install -y python3-scipy
+# RUN pip3 install scikit-learn==0.22.2.post1
+
 WORKDIR /usr/src
 
 ADD ./NIDS/ /usr/src
