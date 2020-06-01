@@ -358,8 +358,8 @@ async function blockTarget(ip){
     if(!result){
         return -2;
     }
-    var iptables_command = `sudo iptables -A INPUT -s ${ip} -j DROP`;
-    var iptables_command_check = `sudo iptables -C INPUT -s ${ip} -j DROP`;
+    var iptables_command = `sudo iptables -I FORWARD -s ${ip} -j DROP`;
+    var iptables_command_check = `sudo iptables -C FORWARD -s ${ip} -j DROP`;
 
     var path, NodeSSH, ssh, fs
  
@@ -425,7 +425,7 @@ async function unblockTarget(ip){
     if(!result){
         return -2;
     }
-    var iptables_command = `sudo iptables -D INPUT -s ${ip} -j DROP`;
+    var iptables_command = `sudo iptables -D FORWARD -s ${ip} -j DROP`;
 
     var path, NodeSSH, ssh, fs
  
