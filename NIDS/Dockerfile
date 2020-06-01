@@ -54,6 +54,10 @@ ADD ./NIDS/ /usr/src
 RUN npm install -g nodemon
 RUN npm install
 
+RUN mkdir /usr/src/src/temp
+RUN touch /usr/src/src/temp/pcap
+RUN touch /usr/src/src/temp/csv
+
 # permissions 
 RUN chmod 777 /usr/src/src/temp/pcap
 RUN chmod 777 /usr/src/src/temp/csv
