@@ -255,7 +255,8 @@ async function getInterfaces(req, res){
 }
 
 /**
- * Returns data for the traffic/time chart
+ * Returns data for the traffic/time chart. If hour is not defined, 
+ * returns flows from last hour.
  *
  * @param {*} req
  * @param {*} res
@@ -412,14 +413,14 @@ async function getIPTrafficData(req, res){
     chartData = {}
 
     flows = flows.map(flow => {
-        flow.len = flow.len_fwd + flow.len_bwd
+        flow.len = parseFloat(((flow.len_fwd + flow.len_bwd) / 1000000).toFixed(2))
         flow.ip_src = flow.ip_src
 
         if(chartData[flow.ip_src] == null){
             chartData[flow.ip_src] = flow.len
         }
         else {
-            chartData[flow.ip_src].len += flow.len
+            chartData[flow.ip_src] = parseFloat(chartData[flow.ip_src]) + flow.len
         }
 
         return flow
@@ -599,7 +600,7 @@ async function removeTarget(req, res){
 }
 
 /**
- * Returns targets
+ * Return an array with every target and its attack per hour
  *
  * @param {*} req
  * @param {*} res
@@ -656,6 +657,13 @@ async function isTargeted(req, res){
     }
 }
 
+/**
+ * Returns the top 10 most attacked IPs from a given target, in descending order.
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 async function getAttacksFromIP(req, res){
     var username = req.body.username;
     var token = req.body.token;
@@ -715,7 +723,7 @@ async function emptyUsers(req, res){
 }
 
 /**
- * Checks if credentials are correct ande returns a session token
+ * Checks if credentials are correct and returns a session token
  *
  * @param {*} req
  * @param {*} res

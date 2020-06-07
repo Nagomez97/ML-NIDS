@@ -22,7 +22,7 @@ function getCookie(c_name)
 
 function checkRunning(){
     // Check if is running
-    $.get("https://localhost:8080/api/sniffer/isRunning", function(data){
+    $.get("https://" + location.hostname + ":8080/api/sniffer/isRunning", function(data){
         if(data.running){
             $('#dropdownMenuButton').addClass('stop').removeClass('start').removeClass('dropdown-toggle');
             $('#dropdownMenuButton').html('Stop')
@@ -44,7 +44,7 @@ function startSniffer(interface){
     var token = getCookie('token');
     var username = getCookie('username');
     $.ajax({
-        url: "https://localhost:8080/api/sniffer/start",
+        url: "https://" + location.hostname + ":8080/api/sniffer/start",
         type: "post",
         contentType: "application/x-www-form-urlencoded",
         data: "interface=" + interface + "&timeout=5&token=" + token + "&username=" + username,
@@ -58,7 +58,7 @@ function stopSniffer(){
     var token = getCookie('token');
     var username = getCookie('username');
     $.ajax({
-        url: "https://localhost:8080/api/sniffer/stop",
+        url: "https://" + location.hostname + ":8080/api/sniffer/stop",
         type: "post",
         contentType: "application/x-www-form-urlencoded",
         data: "token=" + token + "&username=" + username,
@@ -71,7 +71,7 @@ function stopSniffer(){
 function fetchInterfaces(){
     var token = getCookie('token');
     var username = getCookie('username');
-    $.get("https://localhost:8080/api/sniffer/getInterfaces?token="+token+"&username="+username, function(data){
+    $.get("https://" + location.hostname + ":8080/api/sniffer/getInterfaces?token="+token+"&username="+username, function(data){
         data.interfaces.forEach(iface => {
             var _dropdown = $(".dropdown-menu");
             _dropdown.append("<a class='dropdown-item interface btn btn-secondary' role='button' onclick='startSniffer(this.innerText)'>" + iface + "</a>")

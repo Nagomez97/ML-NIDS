@@ -248,7 +248,8 @@ async function attacksPerHour(fromHour){
 }
 
 /**
- * Returns the number of attacks against each IP
+ * Returns the top ten of the most attacked IPs for a given target.
+ * Descending order.
  *
  * @param {*} attacker
  * @param {*} fromHour

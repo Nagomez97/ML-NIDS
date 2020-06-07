@@ -50,8 +50,8 @@ Vue.component('table-dashboard', {
 
         var token = this.getCookie('token');
         var username = this.getCookie('username');
-        
-        var url = 'https://localhost:8080/api/ddbb/flows/getFromHour?hour=' + hour + '&token=' + token + '&username='+username;
+
+        var url = 'https://' + location.hostname +':8080/api/ddbb/flows/getFromHour?hour=' + hour + '&token=' + token + '&username='+username;
 
         this.hour = hour;
 
@@ -108,9 +108,9 @@ Vue.component('table-dashboard', {
 
         $.ajax({
           type: "POST",
-          url: "https://localhost:8080/api/ddbb/ips/setTarget",
+          url: "https://" + location.hostname +":8080/api/ddbb/ips/setTarget",
           data: {ip: ip, username:username, token:token},
-          
+          crossDomain: true,
           dataType: 'json'
         })
       },
@@ -121,9 +121,9 @@ Vue.component('table-dashboard', {
 
         $.ajax({
           type: "POST",
-          url: "https://localhost:8080/api/ddbb/ips/setTarget",
+          url: "https://" + location.hostname +":8080/api/ddbb/ips/setTarget",
           data: {ip: ip, username:username, token:token},
-          
+          crossDomain: true,
           dataType: 'json'
         })
       }
@@ -136,7 +136,7 @@ Vue.component('table-dashboard', {
       this.table = $('#flowTable').DataTable({
         "scrollY": "50vh",
         "scrollCollapse": true,
-        ajax: 'https://localhost:8080/api/ddbb/flows/getFromHour?hour=-1&token='+token+'&username='+username,
+        ajax: 'https://' + location.hostname +':8080/api/ddbb/flows/getFromHour?hour=-1&token='+token+'&username='+username,
         columns: [
             {"data" : "ip_src"},
             {"data" : "ip_dst"},
@@ -161,13 +161,13 @@ Vue.component('table-dashboard', {
         var ip = $(this)[0].cells[0].innerText;
         var dest_ip = $(this)[0].cells[1].innerText;
 
-        var targeted = await axios.post(`https://localhost:8080/api/ddbb/ips/isTargeted`, {
+        var targeted = await axios.post(`https://${location.hostname}:8080/api/ddbb/ips/isTargeted`, {
           ip: ip,
           username: username,
           token: token
         })
 
-        var dest_targeted = await axios.post(`https://localhost:8080/api/ddbb/ips/isTargeted`, {
+        var dest_targeted = await axios.post(`https://${location.hostname}:8080/api/ddbb/ips/isTargeted`, {
           ip: dest_ip,
           username: username,
           token: token
@@ -265,7 +265,7 @@ Vue.component('table-dashboard', {
             </div>
             <div class="time-container">
               <div class="row">
-                <div class="col-xs-3 col-xs-offset-3 no-margin">
+                <div class="col-xs-3 col-xs-offset-3 no-margin buttons">
                   <div class="input-group number-spinner">
                     <span class="input-group-btn">
                       <button class="btn btn-default" data-dir="dwn" @click="subHour();"><span class="glyphicon glyphicon-minus"></span></button>
@@ -340,7 +340,7 @@ Vue.component('traffic-time', {
     var data = {
       labels: [],
       datasets: [{
-        label: 'Flow length (Mb)',
+        label: 'Flow length (Bytes)',
         data: []
       }]
     }
@@ -393,7 +393,7 @@ Vue.component('traffic-time', {
       var token = this.getCookie('token');
 
       $.ajax({
-        url: 'https://localhost:8080/api/ddbb/flows/getChartTrafficTime?token='+token+'&username='+username,
+        url: 'https://' + location.hostname +':8080/api/ddbb/flows/getChartTrafficTime?token='+token+'&username='+username,
         success: function(data) {
           var oldLabels = myChart.data.labels;
 
@@ -528,7 +528,7 @@ Vue.component('traffic-ip', {
       var username = this.getCookie('username');
       var token = this.getCookie('token');
       $.ajax({
-        url: 'https://localhost:8080/api/ddbb/flows/getIPTrafficData?username='+username+'&token='+token,
+        url: 'https://' + location.hostname +':8080/api/ddbb/flows/getIPTrafficData?username='+username+'&token='+token,
         success: function(data) {
 
           data = data.chartData;
@@ -623,7 +623,7 @@ Vue.component('attacks-ip', {
       var username = this.getCookie('username');
       var token = this.getCookie('token');
       $.ajax({
-        url: 'https://localhost:8080/api/ddbb/flows/getAttacksIPData?username='+username+'&token='+token,
+        url: 'https://' + location.hostname +':8080/api/ddbb/flows/getAttacksIPData?username='+username+'&token='+token,
         success: function(data) {
           // var oldLabels = myChart.data.labels;
           myChartAttack.data.labels = [];
@@ -689,7 +689,7 @@ Vue.component('options', {
       var username = this.getCookie('username');
       var token = this.getCookie('token');
 
-      var result = await axios.post(`https://localhost:8080/api/ddbb/ips/removeTarget?username=${username}&token=${token}`, {
+      var result = await axios.post(`https://${location.hostname}:8080/api/ddbb/ips/removeTarget?username=${username}&token=${token}`, {
         ip: ip
       }).catch((error) => {
         alert('Cannot remove. Target is blocked!');
@@ -732,7 +732,7 @@ Vue.component('options', {
     showPiechart: async function(attacker){
       var username = this.getCookie('username');
       var token = this.getCookie('token');
-      var result = await axios.post(`https://localhost:8080/api/ddbb/ips/getAttacksFromIP`, {
+      var result = await axios.post(`https://${location.hostname}:8080/api/ddbb/ips/getAttacksFromIP`, {
                   ip: attacker,
                   username: username,
                   token: token
@@ -787,7 +787,7 @@ Vue.component('options', {
       var ip = target.ip;
       var username = this.getCookie('username');
       var token = this.getCookie('token');
-      var result = await axios.post(`https://localhost:8080/api/ddbb/ips/block`, {
+      var result = await axios.post(`https://${location.hostname}:8080/api/ddbb/ips/block`, {
                     ip: ip,
                     username: username,
                     token: token
@@ -820,7 +820,7 @@ Vue.component('options', {
       var ip = target.ip;
       var username = this.getCookie('username');
       var token = this.getCookie('token');
-      var result = await axios.post(`https://localhost:8080/api/ddbb/ips/unblock`, {
+      var result = await axios.post(`https://${location.hostname}:8080/api/ddbb/ips/unblock`, {
                     ip: ip,
                     username: username,
                     token: token
@@ -850,7 +850,7 @@ Vue.component('options', {
   async mounted() {
     var username = this.getCookie('username');
     var token = this.getCookie('token');
-    const targets = await axios.get(`https://localhost:8080/api/ddbb/ips/getTargets?username=${username}&token=${token}`);
+    const targets = await axios.get(`https://${location.hostname}:8080/api/ddbb/ips/getTargets?username=${username}&token=${token}`);
     if(targets){
       this.targets = targets.data.targets.map(x => {
         if(x['blocked'] == true){

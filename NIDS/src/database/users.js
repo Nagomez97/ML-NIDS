@@ -1,6 +1,7 @@
 const Users = require('../models/index').Users;
-const crypto = require('crypto');
 const logger = require('../../config/log/logsConfig');
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 /**
  * Creates user on ddbb with a hashed password
@@ -9,22 +10,20 @@ const logger = require('../../config/log/logsConfig');
  * @param {*} password
  */
 async function createUser(username, password){
-    var salt = crypto.randomBytes(16).toString('base64');
-    var encrypted = crypto
-                    .createHash('RSA-SHA256')
-                    .update(password)
-                    .update(salt)
-                    .digest('hex');
+
+    // OWASP recommends 12 rounds
+    var hash = bcrypt.hashSync(password,12);
 
     await Users.create({
         username: username,
-        password: encrypted,
-        salt: salt,
+        password: hash,
         token: null
     }).catch((err) => {
         logger.error(`USERS \t\t New user error: ${err}`);
         return res.status(400).json({'error': err.name});
     })
+
+    
 }
 
 /**
@@ -70,7 +69,7 @@ async function updateToken(username, token){
  */
 async function checkLogin(username, password){
     var user = await Users.findOne({
-        attributes: ['username', 'salt', 'password'],
+        attributes: ['username', 'password'],
         where: {username: username}
     });
 
@@ -79,13 +78,9 @@ async function checkLogin(username, password){
         return null
     }
     else{
-        var salt = user.salt;
-        var check = user.password;
-        var encrypted = crypto.createHash('RSA-SHA256')
-                        .update(password)
-                        .update(salt)
-                        .digest('hex');
-        if(encrypted == check){
+        var hash = user.password;
+        var result = bcrypt.compareSync(password,hash);
+        if(result){
             var token = crypto.randomBytes(64).toString('hex');
             await updateToken(username, token);
             return token;

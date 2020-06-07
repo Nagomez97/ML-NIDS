@@ -10,10 +10,8 @@ process.env.ENV = process.env.ENV || 'development';
 //==============================
 process.env.PORT = process.env.PORT != null ? process.env.PORT : 8080;
 
-// console.log(process.env)
-
 if(process.env.DB_USERNAME == null || process.env.DB_PASSWORD == null){
-    // logger.error(`SEQUELIZE \t Empty environment variables.`);
+    logger.error(`SEQUELIZE \t Empty environment variables.`);
 }
 
 //==============================
@@ -21,10 +19,8 @@ if(process.env.DB_USERNAME == null || process.env.DB_PASSWORD == null){
 //==============================
 module.exports = {
     development: {
-        // username: process.env.DB_USERNAME,
-        username: 'nacho',
-        // password: process.env.DB_PASSWORD,
-        password: 'nacho',
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
         database: 'NIDS',
         host: 'localhost',
         dialect: 'mysql',

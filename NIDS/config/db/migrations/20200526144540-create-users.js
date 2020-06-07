@@ -14,15 +14,9 @@ module.exports = {
         allowNull: false
       },
       password: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(512),
         get() {
           return () => this.getDataValue('password')
-        }
-      },
-      salt: {
-        type: Sequelize.STRING,
-        get() {
-          return() => this.getDataValue('salt')
         }
       },
       token: {

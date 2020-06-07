@@ -28,7 +28,6 @@ CREATE TABLE `Users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `salt` varchar(255) DEFAULT NULL,
   `token` varchar(255) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,

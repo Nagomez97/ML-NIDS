@@ -51,5 +51,3 @@ RUN chmod 777 /usr/src/src/temp/csv
 
 RUN export DB_USERNAME
 RUN export DB_PASSWORD
-
-# RUN npm run start
