@@ -1,0 +1,38 @@
+.left-menu {
+    width: 100px;
+    height: 85vh;
+    position: absolute;
+    padding: 15px 0 0 5px;
+}
+
+.left-menu-item {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    margin-bottom: 15px;;
+}
+
+.left-menu-item > a {
+    cursor: pointer;
+    color: rgba(237,240,241,1);
+}
+
+.left-menu-item > a:hover {
+    /* color: rgba(237,240,241,0.6); */
+    color: rgba(0,136,169,0.8);
+}
+
+.left-menu-item > a.open {
+    color: rgba(0,136,169,0.8);
+}
+
+.left-menu-item > a:focus {
+    outline: none; 
+}
+
+.left-menu-icon {
+    color: inherit;
+}

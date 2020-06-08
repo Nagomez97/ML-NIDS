@@ -10,6 +10,10 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
         <link rel="stylesheet" type="text/css" href="/css/styles.css">
+        <link rel="stylesheet" type="text/css" href="/css/table.css">
+        <link rel="stylesheet" type="text/css" href="/css/leftMenu.css">
+        <link rel="stylesheet" type="text/css" href="/css/charts.css">
+        <link rel="stylesheet" type="text/css" href="/css/options.css">
 
         <!-- jQuery library -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -19,27 +23,43 @@
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
         
+        <!-- Feather icons -->
+        <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+        <!-- Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
     </head>
     <body>
-        <div class="main">
-            <header>
+        <div class="main" id="app">
+            <header id='header-menu'>
                 <img class="logo" src="/images/vision_100px.png" alt="Logo" width="70px">
                 <nav>
                     <ul class="nav_links">
-                        <li><a href="#">Services</a></li>
-                        <li><a href="#">Projects</a></li>
-                        <li><a href="#">About</a></li>
-                        <li> <a class="cta" href="#"><button>Launch</button></a></li>
+                        <li><a href="/logout">Logout</a></li>
+                        <li><a href="https://nagomez97.github.io/ML-NIDS/">About</a></li>
+                        <li>
+
+                            <div class="dropdown" id="dropdown-div">
+                                <button class="btn btn-secondary dropdown-toggle start startButton-text" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Launch
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                </div>
+                              </div>
+                        </li>
                     </ul>
                 </nav>
                 
             </header>
-            <div class="lat_menu" id="menu">
+            
 
-            </div>
+            <left_menu v-bind:view='open_view' v-on:changeview="updateView($event)"></left_menu>
             
             <main class="dashboard" id="dashboard">
-                <dashboard v-bind:flows="flows"></dashboard>
+                <!-- <keep-alive> -->
+                    <component v-bind:is="open_view" v-bind:chart="chart_type" v-on:changechart="changeChart($event)"></component>
+                <!-- </keep-alive> -->
             </main>
             <footer class="footer">
                 <ul class="nav_links">
@@ -50,8 +70,11 @@
         </div>
         
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/vuetify/2.2.18/vuetify.min.js"></script>
         <script src="/js/app.js"></script>
+        <script src="/js/utils.js"></script>
+        
+        <script>feather.replace()</script>
     </body>
 </html>

@@ -10,3 +10,6 @@ The whole deployment process is [explained on the project webpage](https://nagom
 
 # IMPORTANT
 NIDS **must** be run on a Linux system. This is because the containers use the _host_ network mode in order to be able to sniff traffic from the host network interface. Because of the Hyper-V, Windows does not allow this configuration.
+
+# VERY IMPORTANT
+Don't forget to **change default database passwords**! Please, modify *docker_config/dev/app_db.dev.env* and *docker_config/dev/app_db.dev.env*.

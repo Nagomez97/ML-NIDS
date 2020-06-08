@@ -1,0 +1,111 @@
+.col-width {
+    width: 25%;
+}
+
+.options {
+    padding: 0px 10px!important;
+    overflow: hidden;
+    position: relative;
+    /* width: 75%; */
+}
+
+.options-options-container {
+    height: 100%;
+    width: 30%;
+    position: absolute;
+    top: 0;
+    display: flex;
+
+    align-content: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+}
+
+.x {
+    left: 0;
+}
+
+.block {
+    left: 80px;
+}
+
+.green {
+    color: rgba(0,240,20,0.8);
+}
+
+.red {
+    color: rgba(255,2,2,0.8);
+}
+
+.orange {
+    color: rgba(255, 115, 0, 0.8);
+}
+
+.options-options-container > a {
+    display: block;
+    width: 30px;
+    height: 30px;
+}
+
+.options-a:hover {
+    color: rgba(230,2,2,0.8);
+}
+
+.option-button-x {
+    color: rgba(230,2,2,1);
+}
+
+.option-button-shield {
+    color: rgba(0,136,169,0.8);
+}
+
+.option-button-shieldoff {
+    color: rgba(0, 160, 13, 1);
+}
+
+.options-x > svg:hover {
+    color: rgba(60,2,2,0.6);
+}
+
+.options-shield > svg:hover {
+    color: rgba(0,100,133,0.6);
+}
+
+.options-shieldoff > svg:hover {
+    color: rgba(0,200,0,0.6);
+}
+
+/* Piechart overlay */
+#piechart_overlay {
+    position: fixed; /* Sit on top of the page content */
+    display: block;
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.7); /* Black background with opacity */
+    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: auto; /* Add a pointer on hover */
+}
+
+#piechart_container {
+    position: absolute;
+    display: block;
+    width: 50%;
+    height: 50%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    margin: auto;
+    cursor: auto;
+}
+
+.hidden {
+    display: none!important;
+}

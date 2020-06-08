@@ -1,4 +1,4 @@
-const server = require('../server/server');
+const server = require('../core/core');
 
 //This is an example setRoutes function
 //Every connector must to have this type of routes configuration
@@ -6,6 +6,9 @@ const server = require('../server/server');
 function setRoutes(app) {
     //route to get an audit by the id in the query params
     app.get('/', server.home);
+    app.post('/login', server.login);
+    app.get('/logout', server.logout);
+    app.post('/newUser', server.createUser);
     
 }
 

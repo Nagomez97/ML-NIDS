@@ -1,0 +1,176 @@
+/* TABLE */
+
+table {
+    background-color: #24252A;
+    border-radius: 10px;
+}
+
+td {
+    font-family: "Montserrat", sans-serif;
+     font-weight: 500;
+     font-size: 16px;
+     color: #edf0f1;
+     background-color: none;
+ }
+ 
+ th {
+     font-family: "Montserrat", sans-serif;
+     font-weight: 500;
+     font-size: 20px;
+     color: #edf0f1;
+}
+
+.buttons {
+    width: 300px;
+}
+     
+
+table.dataTable thead th {
+    padding: 8px 8px;
+}
+
+ #flowTable_info, #flowTable_previous, #flowTable_next {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: #edf0f1 !important;
+    text-decoration: none;
+ }
+
+ #flowTable_info {
+     cursor: default;
+ }
+
+ #flowTable_previous, #flowTable_next {
+     cursor: pointer;
+ }
+
+ .dataTables_wrapper .dataTables_paginate .paginate_button {
+     padding: 0.2em 0.5em;
+ }
+
+
+tbody>tr:hover {
+    background-color: rgb(130,130,130, 0.8) !important; /*Dimgray*/
+    cursor: default;
+}
+
+table.dataTable tbody tr {
+    background-color: #24252A;
+}
+
+tbody > tr, tbody > td {
+    cursor: pointer !important;
+}
+
+#flowTable_filter > label > input {
+    color: #24252A;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    text-align: center;
+
+}
+
+#flowTable_paginate > span > .paginate_button:not(.current) {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    color: #edf0f1 !important;
+}
+
+#flowTable_paginate > span > span {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    color: #edf0f1 !important;
+}
+
+/* Select time interval */
+.time-container > .row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+}   
+
+button.send-hour {
+    width: 80%;
+    height: 100%;
+    border-radius: 7px;
+    background: none;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    color: #edf0f1 !important;
+}
+
+button.send-hour:hover {
+    background-color: rgb(130,130,130, 0.8);
+}
+
+
+.no-margin {
+    margin: 0!important;
+}
+
+.btn:hover, .btn:active, .btn:focus {
+    color: #333!important;
+}
+
+.btn:active, .btn:focus {
+    background-color: #fff;
+}
+
+.play-btn {
+    background: none;
+    border: none;
+    font-size: 25px;
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 3px 9px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+}
+
+.play-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3)!important;
+}
+
+.glyphicon-pause {
+    color: #f18f0a;
+}
+
+.glyphicon-play {
+    color: #4ccf07;
+}
+
+.options-btn-container {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+.options-btn-container .btn {
+    background-color: red;
+}
+
+.disabled-button {
+    background-color: lightslategray;
+    color: #edf0f1;
+    cursor: auto;
+}
+
+.disabled-button:hover {
+    background-color: lightslategray!important;
+    color: #edf0f1!important;
+    cursor: auto;
+}

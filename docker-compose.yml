@@ -14,9 +14,6 @@ services:
         env_file: 
         # Use process.env in node.js code, like this 'process.env.ENV'.
         - ./docker_config/dev/mysql.dev.env
-        environment: 
-            - DB_USERNAME=nacho
-            - DB_PASSWORD=nacho
         ports:
         # <Port exposed> : < MySQL Port running inside container>
             - '3306:3306'
@@ -25,8 +22,6 @@ services:
             - '3306'
         # Where our data will be persisted
         volumes:
-        # Crea el volumen (my-db) en el host que almacena de forma persistente el contenido del directorio '/var/lib/mysql' ubicado en el contendor.
-            - my-db:/var/lib/mysql
             - ./docker_config/db-init:/docker-entrypoint-initdb.d  
             - /etc/timezone:/etc/timezone:ro
             - "/etc/localtime:/etc/localtime:ro"
@@ -40,18 +35,17 @@ services:
             dockerfile: ./NIDS/Dockerfile
         env_file: 
         - ./docker_config/dev/app_db.dev.env
-        environment: 
-            - DB_USERNAME=nacho
-            - DB_PASSWORD=nacho
         ports: 
             - 8080:8080
         depends_on:
             - db
         volumes:
-        - ./NIDS/:/usr/src/
+        #  Comment the first one on deployment
+        # - ./NIDS/:/usr/src/
         - /etc/timezone:/etc/timezone:ro
         - "/etc/localtime:/etc/localtime:ro"
-        command: npm run start:dev
+        command: npm run start
+        # command: npm run start:dev
 
     frontend:
         image: frontend
@@ -64,15 +58,12 @@ services:
         ports: 
             - 8000:8000
         volumes:
-        - ./frontend/:/usr/src/
+        # Comment the first one on deployment
+        # - ./frontend/:/usr/src/
         - /etc/timezone:/etc/timezone:ro
         - "/etc/localtime:/etc/localtime:ro"
-        command: npm run start:dev
-
-    
-# Names our volume
-volumes:
-    my-db:
+        command: npm run start
+        # command: npm run start:dev
 
 networks:
     default:

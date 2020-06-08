@@ -1,23 +1,21 @@
-FROM ubuntu:latest
+FROM ubuntu:bionic
+
 
 RUN apt-get update --fix-missing 
 
 # tshark
 RUN apt-get install -y tshark
 
-#java
-
-# Install OpenJDK-8
-RUN apt-get update && \
-    apt-get install -y openjdk-8-jdk && \
-    apt-get install -y ant && \
-    apt-get clean;
+# Install OpenJDK-8 for Flowmeter
+RUN apt-get install -y openjdk-8-jre-headless
+RUN apt-get install -y openjdk-8-jdk
+RUN apt-get install -y ant
+RUN apt-get clean
 
 # Fix certificate issues
-RUN apt-get update && \
-    apt-get install ca-certificates-java && \
-    apt-get clean && \
-    update-ca-certificates -f;
+RUN apt-get install ca-certificates-java
+RUN apt-get clean
+RUN update-ca-certificates -f
 
 # Setup JAVA_HOME -- useful for docker commandline
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
@@ -33,6 +31,11 @@ RUN chmod +x setup_12.x
 RUN ./setup_12.x
 RUN apt-get -y install nodejs
 
+# Python and ML libraries
+RUN apt-get install -y python3-pip
+RUN pip3 install pandas
+RUN pip3 install scikit-learn==0.22.2.post1
+
 WORKDIR /usr/src
 
 ADD ./NIDS/ /usr/src
@@ -47,4 +50,5 @@ RUN chmod 777 /usr/src/src/temp/csv
 RUN export DB_USERNAME
 RUN export DB_PASSWORD
 
-# RUN npm run start
+COPY ./NIDS/package.json ./
+RUN npm install

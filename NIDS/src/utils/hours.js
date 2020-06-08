@@ -1,6 +1,6 @@
 /**
  * Returns current date and hour
- * dd/mm/yy hh:mm:ss AM/PM
+ * dd/mm/yy hh:mm:ss (24h)
  *
  */
 function getCurrentTime(){
@@ -9,10 +9,10 @@ function getCurrentTime(){
     var month = (datetime.getMonth() + 1 > 9 ? datetime.getMonth() + 1 : '0' + (datetime.getMonth() + 1));
     var year = datetime.getFullYear();
     
-    var currentDate = `${day}/${month}/${year}`
+    var currentDate = `${year}/${month}/${day}`
 
-    var currentTime = datetime.toLocaleTimeString();
-    if(currentTime.length < 11){
+    var currentTime = datetime.toTimeString().split(' ')[0];
+    if(currentTime.length < 8){
         currentTime = '0' + currentTime; // Append initial 0
     }
 
@@ -29,7 +29,7 @@ function getCurrentDate(){
     var month = (datetime.getMonth() + 1 > 9 ? datetime.getMonth() + 1 : '0' + (datetime.getMonth() + 1));
     var year = datetime.getFullYear();
     
-    var currentDate = `${day}/${month}/${year}`
+    var currentDate = `${year}/${month}/${day}`
 
     return currentDate;
 }
@@ -44,7 +44,7 @@ function getYesterdayDate(){
     var month = (datetime.getMonth() + 1 > 9 ? datetime.getMonth() + 1 : '0' + (datetime.getMonth() + 1));
     var year = datetime.getFullYear();
     
-    var currentDate = `${day}/${month}/${year}`
+    var currentDate = `${year}/${month}/${day}`
 
     return currentDate;
 }
@@ -60,49 +60,23 @@ function get24DateFromHour(hour){
 
     if(hour >= currentHour){ // Day before
         var date = getYesterdayDate();
-        var ampm = 'AM';
-        
-        if(hour > 12){
-            ampm = 'PM';
-        }
-        if(hour == 0){
-            hour = 12;
-            ampm = 'PM'
-        }
-        
-        if(hour > 12){
-            hour = hour % 12;
-        }
 
         if(hour.toString().length == 1){
             hour = '0' + hour;
         }
 
-        hour = hour + ':00:00 ' + ampm;
+        hour = hour + ':00:00';
 
         return date + ' ' + hour;
     }
     else { // Current day
         var date = getCurrentDate();
-        var ampm = 'AM';
-        
-        if(hour > 12){
-            ampm = 'PM';
-        }
-        if(hour == 0){
-            hour = 12;
-            ampm = 'PM'
-        }
-        
-        if(hour > 12){
-            hour = hour % 12;
-        }
 
         if(hour.toString().length == 1){
             hour = '0' + hour;
         }
 
-        hour = hour + ':00:00 ' + ampm;
+        hour = hour + ':00:00';
 
         return date + ' ' + hour;
     }
@@ -121,51 +95,24 @@ function get24DateToHour(hour){
 
     if(hour > currentHour){ // Day before
         var date = getYesterdayDate();
-        var ampm = 'AM';
         
-        if(hour > 12){
-            ampm = 'PM';
-        }
-
-        if(hour == 0){
-            hour = 12;
-            ampm = 'PM'
-        }
-        
-        if(hour > 12){
-            hour = hour % 12;
-        }
 
         if(hour.toString().length == 1){
             hour = '0' + hour;
         }
 
-        hour = hour + ':00:00 ' + ampm;
+        hour = hour + ':00:00';
 
         return date + ' ' + hour;
     }
     else { // Current day
         var date = getCurrentDate();
-        var ampm = 'AM';
-
-        if(hour == 0){
-            hour = 12;
-            ampm = 'PM'
-        }
         
-        if(hour > 12){
-            ampm = 'PM';
-        }
-        
-        if(hour > 12){
-            hour = hour % 12;
-        }
-
         if(hour.toString().length == 1){
             hour = '0' + hour;
         }
 
-        hour = hour + ':00:00 ' + ampm;
+        hour = hour + ':00:00';
 
         return date + ' ' + hour;
     }
@@ -183,10 +130,10 @@ function getLastHour(){
     var month = (datetime.getMonth() + 1 > 9 ? datetime.getMonth() + 1 : '0' + (datetime.getMonth() + 1));
     var year = datetime.getFullYear();
     
-    var currentDate = `${day}/${month}/${year}`
+    var currentDate = `${year}/${month}/${day}`
 
-    var currentTime = datetime.toLocaleTimeString();
-    if(currentTime.length < 11){
+    var currentTime = datetime.toTimeString().split(' ')[0];
+    if(currentTime.length < 8){
         currentTime = '0' + currentTime; // Append initial 0
     }
 
