@@ -16,15 +16,22 @@ As Vision is a quite simple application, it has few classes. The next image show
 
 # Modules
 Vision has three main modules which correspond to the three containers.
+
 The **Backend** module is responsible for the network sniffing, data transformation and attack detection functionalities, while it manages the NIDS API.
+
 The **Data** module includes the MySQL database and every related functionality.
+
 The **Frontend** module refers to the web server functionality. The frontend has been developed using VueJS.
+
 ![Modules](images/modules.png "Vision modules.")
 
 # Technology
 As the application includes a wide range of functionalities, many different technologies has been used during its development.
+
 The **Backend** has been written using **NodeJS**, but it also includes **Java** code (Flowmeter) and **Python** (ML functionalities).
+
 The **Frontend** server has been developed using **NodeJS**, while the web GUI includes **VueJS** components.
+
 The **Data Layer** is composed by a **MySQL** database and an NodeJS-ORM called **Sequelize**.
 
 # API
