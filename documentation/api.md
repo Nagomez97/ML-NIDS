@@ -11,4 +11,4 @@
 ---
 
 # API
-![API image](documentation/images/API.png "Vision containers.")
+![API image](images/API.png "Vision containers.")
