@@ -10,11 +10,15 @@
 
 ---
 
-# Classes
+# Design
+This section contains information about the Vision design. We will talk about the application modules, Docker and the technology used at development.
+
+## Classes
 As Vision is a quite simple application, it has few classes. The next image shows them.
+
 ![Class diagram](images/classes.png "Vision class diagram.")
 
-# Modules
+## Modules
 Vision has three main modules which correspond to the three containers.
 
 The **Backend** module is responsible for the network sniffing, data transformation and attack detection functionalities, while it manages the NIDS API.
@@ -25,7 +29,7 @@ The **Frontend** module refers to the web server functionality. The frontend has
 
 ![Modules](images/modules.png "Vision modules.")
 
-# Technology
+## Technology
 As the application includes a wide range of functionalities, many different technologies has been used during its development.
 
 The **Backend** has been written using **NodeJS**, but it also includes **Java** code (Flowmeter) and **Python** (ML functionalities).
@@ -34,6 +38,7 @@ The **Frontend** server has been developed using **NodeJS**, while the web GUI i
 
 The **Data Layer** is composed by a **MySQL** database and an NodeJS-ORM called **Sequelize**.
 
-# API
+## API
 Actually, there are two APIs, each of them inside its own container. The main API is called NIDS and it includes the proper backend functionality, while the Frontend API is the responsible for the web server management.
+
 ![API image](images/API.png "Vision containers.")
