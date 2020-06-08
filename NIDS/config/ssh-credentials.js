@@ -1,6 +1,6 @@
 module.exports = {
     credentials: {
-        ssh_username: 'nacho',
-        ssh_password: '***REMOVED***'
+        ssh_username: 'username',
+        ssh_password: 'password.'
     }
 }
