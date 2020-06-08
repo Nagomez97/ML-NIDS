@@ -6,8 +6,8 @@ package-lock.json
 logs/
 
 
-NIDS/src/temp/pcap/*
-NIDS/src/temp/csv/*
+# NIDS/src/temp/pcap/*
+# NIDS/src/temp/csv/*
 
 NIDS/*.log
 
