@@ -27,11 +27,18 @@ Common NIDS can be classified as _Signature Based_ or _Anomaly Based_. The first
 
 The first version of this project will try to enhance the Signature Based approach, replacing those admin-defined rules with a ML-trained classifier.
 
-The dataset used is the [CSE-CIC-IDS2018](https://www.unb.ca/cic/datasets/ids-2018.html). You can find  all the information about it in the link. This dataset includes more than 100Gb of _.pcaps_, so I have reduced the number of packets to minimize the training time waste.
+From the beginning, the dataset used has been the [CSE-CIC-IDS2018](https://www.unb.ca/cic/datasets/ids-2018.html). You can find  all the information about it in the link. This dataset includes more than 100Gb of _.pcaps_, so I have reduced the number of packets to minimize the training time waste.
+
+However, the results obtained were not as we expected. Maybe the CSE-CIC-IDS2018 is not as scalable as its creators say. So we decided to create our own dataset, called **VISION-IDS2020**, which includes SSH and FTP bruteforce attacks and DoS attacks using *hydra* the *hulk* tool. This time, the results were much better.
+
+## Train your own model
+Of course, you may want to train your own model in order to increase the accuracy rate of Vision at your network. There is an *.ipynb* notebook in the folder *model_training/* in order to help you training your model. You will need your own dataset, too.
+
+Note the notebook is designed to be run from a [Google Colab](https://colab.research.google.com) server.
 
 ## Server
 The server is written in [NodeJS](https://nodejs.org). It includes a [REST API](api.md) and some modules capable of repeatedly sniffing traffic every _n_ seconds, write it on a _.pcap_ file and use the [CICFlowMeter](https://github.com/ahlashkari/CICFlowMeter) to create flows from bunches of packets and write then as a _.csv_ file (which will be the input of our ML Classifier).
 
 I know... I know... There are _trillions_ of better ways to perform capture live traffic but, as I am using the _FlowMeter_ and it needs _.pcap_ files, a completely _live_ capture is just not possible. So I will be happy using packets captured every, lets say... 20 seconds.
 
-And why is that? _CICFlowMeter_ joins related packets (same IP, same port...) and creates a _flow_. A _flow_ is an object containing statistical information about those related packets, like RTT, amount of bytes transmitted/received, bytes per second... Which is PERFECT for a ML algorithm. We will avoid lots of categorical values replacing them with statistical, numeric data.
+And why is that? _CICFlowMeter_ merges related packets (same IP, same port...) and creates a _flow_. A _flow_ is an object containing statistical information about those related packets, like RTT, amount of bytes transmitted/received, bytes per second... Which is PERFECT for a ML algorithm. We will avoid lots of categorical values replacing them with statistical, numeric data.

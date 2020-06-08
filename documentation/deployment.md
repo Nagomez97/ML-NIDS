@@ -52,7 +52,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 docker-compose --version
 ```
 
-## 3. Install NodeJS and npm
+## 3. Install NodeJS and npm (developers)
 ```
 curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
 sudo apt-get install -y nodejs
@@ -76,6 +76,8 @@ docker-compose up
 ```
 
 This will launch both containers. The API will be listening at _http://localhost:8080_ and the dashboard will be at _http://localhost:8000_. Database will be attached to the port 3306.
+
+As there are two different containers running two different APIs (NIDS and Frontend), the web GUI will perform CORS requests between them. Firefox has a little bug which makes impossible to perform CORS request from Vision when trying to access the server from a host other than *localhost*. It is **highly recommended** to use **Google Chrome** when connecting to Vision.
 
 ## 6. Development
 If you wish to contribute to the development of the tool, there is a development environment available. Just go to de _docker-compose.yml_ file and find the "command" tag on both _nids_ and _frontend_ containers. Change its content to
