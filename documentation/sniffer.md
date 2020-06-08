@@ -6,7 +6,7 @@
 3. [Design](design.md)
 4. [Sniffer](sniffer.md)
 5. [FlowMeter](flowmeter.md)
-6. [Analyzer](analyzer.md)
+6. [Security](security.md)
 
 ---
 

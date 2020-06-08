@@ -5,8 +5,8 @@
 2. [Deployment](deployment.md)
 3. [Design](design.md)
 4. [Sniffer](sniffer.md)
-5. [FlowMeter](sniffer.md)
-6. [Analyzer](analyzer.md)
+5. [FlowMeter](flowmeter.md)
+6. [Security](security.md)
 
 ---
 
