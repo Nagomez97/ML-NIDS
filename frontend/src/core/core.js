@@ -178,11 +178,14 @@ async function createUser(req, res){
     else{
         request.post('https://172.19.0.1:8080/api/users/newUser', {json: {username: username, password: password}}, (error, response, body) => {
             var imageUrl = '"/images/wallpapers/' + String(getRandomInt(1,5)) + '.jpg"'
-            if(body.ok){
+            if(body == null){
+                res.redirect('/');
+            }
+            else if(body.ok){
                 res.redirect('/');
             }
             else {
-                res.render('login', {url: imageUrl, message: 'Cannot create user.', action: 'newUser', button:'Create user'});
+                res.render('login', {url: imageUrl, message: 'Cannot create user.', action: 'newUser', button:'Create user'})
             }
         });
     }

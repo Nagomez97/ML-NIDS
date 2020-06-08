@@ -6,8 +6,6 @@ RUN apt-get update --fix-missing
 # tshark
 RUN apt-get install -y tshark
 
-#java
-
 # Install OpenJDK-8 for Flowmeter
 RUN apt-get install -y openjdk-8-jre-headless
 RUN apt-get install -y openjdk-8-jdk
@@ -51,3 +49,6 @@ RUN chmod 777 /usr/src/src/temp/csv
 
 RUN export DB_USERNAME
 RUN export DB_PASSWORD
+
+COPY ./NIDS/package.json ./
+RUN npm install

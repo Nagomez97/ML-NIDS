@@ -1,5 +1,5 @@
-NIDS/node_modules
+# NIDS/node_modules
 NIDS/logs/
 NIDS/.dockerignore
 NIDS/.sequelizerc
-NIDS/Dockerfile
+# NIDS/Dockerfile
