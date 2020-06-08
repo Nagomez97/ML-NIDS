@@ -75,7 +75,9 @@ docker-compose build
 docker-compose up
 ```
 
-This will launch both containers. The API will be listening at _http://localhost:8080_ and the dashboard will be at _http://localhost:8000_. Database will be attached to the port 3306.
+This will launch both containers. The API will be listening at _https://localhost:8080_ and the dashboard will be at _https://localhost:8000_. Database will be attached to the port 3306.
+
+**REMEMBER THE HTTPS! REDIRECTION IS STILL NOT SUPORTED!!**
 
 As there are two different containers running two different APIs (NIDS and Frontend), the web GUI will perform CORS requests between them. Firefox has a little bug which makes impossible to perform CORS request from Vision when trying to access the server from a host other than *localhost*. It is **highly recommended** to use **Google Chrome** when connecting to Vision.
 
