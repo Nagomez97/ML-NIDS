@@ -18,3 +18,5 @@ The NIDS API has a *bearer token* authentication layer, so only authenticated us
 ![Token authentication](images/token.png "Token authentication procedure.")
 
 Vision allows the creation of **only one user**, wich will be the IDS administrator. Its credentials will be created the first time the application has been launched. At every moment, password are stored as *hashes* using the *bcrypt* algorithm.
+
+The NIDS API and the web server have SSL certificates to allow HTTPS traffic. Please, generate your own certificates and save them on *NIDS/src/certs/*.
