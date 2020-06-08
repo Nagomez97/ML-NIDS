@@ -44,6 +44,8 @@ RUN npm install -g nodemon
 RUN npm install
 
 # permissions 
+RUN mkdir /usr/src/src/temp/pcap
+RUN mkdir /usr/src/src/temp/csv
 RUN chmod 777 /usr/src/src/temp/pcap
 RUN chmod 777 /usr/src/src/temp/csv
 
