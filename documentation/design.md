@@ -12,14 +12,14 @@
 
 # Classes
 As Vision is a quite simple application, it has few classes. The next image shows them.
-![Class diagram](https://github.com/Nagomez97/ML-NIDS/blob/master/documentation/images/classes.png "Vision class diagram.")
+![Class diagram](images/classes.png "Vision class diagram.")
 
 # Modules
 Vision has three main modules which correspond to the three containers.
 The **Backend** module is responsible for the network sniffing, data transformation and attack detection functionalities, while it manages the NIDS API.
 The **Data** module includes the MySQL database and every related functionality.
 The **Frontend** module refers to the web server functionality. The frontend has been developed using VueJS.
-![Modules](https://github.com/Nagomez97/ML-NIDS/blob/master/documentation/images/modules.png "Vision modules.")
+![Modules](images/modules.png "Vision modules.")
 
 # Technology
 As the application includes a wide range of functionalities, many different technologies has been used during its development.
@@ -29,4 +29,4 @@ The **Data Layer** is composed by a **MySQL** database and an NodeJS-ORM called 
 
 # API
 Actually, there are two APIs, each of them inside its own container. The main API is called NIDS and it includes the proper backend functionality, while the Frontend API is the responsible for the web server management.
-![API image](https://github.com/Nagomez97/ML-NIDS/blob/master/documentation/images/API.png "Vision containers.")
+![API image](images/API.png "Vision containers.")
