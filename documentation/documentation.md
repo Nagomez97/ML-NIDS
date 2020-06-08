@@ -32,6 +32,6 @@ The dataset used is the [CSE-CIC-IDS2018](https://www.unb.ca/cic/datasets/ids-20
 ## Server
 The server is written in [NodeJS](https://nodejs.org). It includes a [REST API](api.md) and some modules capable of repeatedly sniffing traffic every _n_ seconds, write it on a _.pcap_ file and use the [CICFlowMeter](https://github.com/ahlashkari/CICFlowMeter) to create flows from bunches of packets and write then as a _.csv_ file (which will be the input of our ML Classifier).
 
-I know... I know... There are _trillions_ of better ways for capture live traffic but, as I am using the _FlowMeter_ and it needs _.pcap_ files, a completely _live_ capture is just not possible. So I will be happy using packets captured every, lets say... 20 seconds.
+I know... I know... There are _trillions_ of better ways to perform capture live traffic but, as I am using the _FlowMeter_ and it needs _.pcap_ files, a completely _live_ capture is just not possible. So I will be happy using packets captured every, lets say... 20 seconds.
 
 And why is that? _CICFlowMeter_ joins related packets (same IP, same port...) and creates a _flow_. A _flow_ is an object containing statistical information about those related packets, like RTT, amount of bytes transmitted/received, bytes per second... Which is PERFECT for a ML algorithm. We will avoid lots of categorical values replacing them with statistical, numeric data.
