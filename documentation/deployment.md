@@ -97,6 +97,6 @@ If you wish to contribute to the development of the tool, there is a development
 command: npm run start:dev
 ```
 
-This will launch the containers from nodemon, so every change you make on your local code will be automatically deploy on the containers. 
+This will launch the containers from nodemon, so every change you make on your local code will be automatically deployed on the containers. 
 
 **IMPORTANT: you will need to cd to NIDS/ and frontend/ and run npm install in order to meet each container dependencies**
