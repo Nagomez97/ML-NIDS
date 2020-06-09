@@ -5,6 +5,7 @@ package-lock.json
 
 logs/
 
+NIDS/config/ssh-credentials.js
 
 NIDS/src/temp/pcap/*.pcap
 NIDS/src/temp/csv/*.csv

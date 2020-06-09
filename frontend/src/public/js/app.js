@@ -909,11 +909,11 @@ Vue.component('options', {
                   <tr v-for="target in targets" role="row" class="even">
                     <td class="options-element" @click="showPiechart(target.ip);"> {{target.ip}} </td>
                     <td class="options-element" @click="showPiechart(target.ip);">
-                      <span class="green" v-if="target.stat_from <= 25"> {{target.stat_from}} (src) </span> 
+                      <span class="green" v-if="target.stat_from < 25"> {{target.stat_from}} (src) </span> 
                       <span class="orange" v-if="target.stat_from >= 25 && target.stat_from <= 75"> {{target.stat_from}} (src) </span> 
                       <span class="red" v-if="target.stat_from > 75"> {{target.stat_from}} (src) </span> 
                       /
-                      <span class="green" v-if="target.stat_to <= 25"> {{target.stat_to}} (dst) </span>
+                      <span class="green" v-if="target.stat_to < 25"> {{target.stat_to}} (dst) </span>
                       <span class="green" v-if="target.stat_to >= 25 && target.stat_to <= 75"> {{target.stat_to}} (dst) </span>
                       <span class="green" v-if="target.stat_to > 75"> {{target.stat_to}} (dst) </span>
                     </td>
