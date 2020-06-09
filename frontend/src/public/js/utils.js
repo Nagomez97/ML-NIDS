@@ -47,7 +47,7 @@ function startSniffer(interface){
         url: "https://" + location.hostname + ":8080/api/sniffer/start",
         type: "post",
         contentType: "application/x-www-form-urlencoded",
-        data: "interface=" + interface + "&timeout=5&token=" + token + "&username=" + username,
+        data: "interface=" + interface + "&timeout=15&token=" + token + "&username=" + username,
         success: function(){
             checkRunning();
         }
