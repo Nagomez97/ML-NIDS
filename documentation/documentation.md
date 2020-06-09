@@ -42,3 +42,5 @@ The server is written in [NodeJS](https://nodejs.org). It includes a [REST API](
 I know... I know... There are _trillions_ of better ways to perform capture live traffic but, as I am using the _FlowMeter_ and it needs _.pcap_ files, a completely _live_ capture is just not possible. So I will be happy using packets captured every, lets say... 20 seconds.
 
 And why is that? _CICFlowMeter_ merges related packets (same IP, same port...) and creates a _flow_. A _flow_ is an object containing statistical information about those related packets, like RTT, amount of bytes transmitted/received, bytes per second... Which is PERFECT for a ML algorithm. We will avoid lots of categorical values replacing them with statistical, numeric data.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/L2C8rVO2lAg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
