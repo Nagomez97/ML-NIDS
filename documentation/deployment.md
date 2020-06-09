@@ -65,7 +65,7 @@ npm -v
 ## (REALLY IMPORTANT!) Change environment variables
 At **docker_config/dev/**, there are two _.env_ files containing the database usernames and passwords. These are example files, so you **MUST** change its content. Set new credentials on both files before launching Vision.
 
-## 6. Set up you SSH environment (**VERY IMPORTANT!!!**)
+## 4. Set up you SSH environment (**VERY IMPORTANT!!!**)
 To block IPs on your network, Vision needs to set up some *iptables* rules on your host. You will need to create a non-root user and modify the *sudoers* file 
 in order to allow Vision to execute the *iptables* command through SSH without a password prompt. 
 
@@ -91,7 +91,7 @@ This will launch both containers. The API will be listening at _https://localhos
 
 As there are two different containers running two different APIs (NIDS and Frontend), the web GUI will perform CORS requests between them. Firefox has a little bug which makes impossible to perform CORS request from Vision when trying to access the server from a host other than *localhost*. It is **highly recommended** to use **Google Chrome** when connecting to Vision.
 
-## 7. Development
+## 6. Development
 If you wish to contribute to the development of the tool, there is a development environment available. Just go to de _docker-compose.yml_ file and find the "command" tag on both _nids_ and _frontend_ containers. Change its content to
 ```
 command: npm run start:dev
